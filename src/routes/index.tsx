@@ -2,14 +2,48 @@ import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import MainLayout from '../layout/MainLayout/MainLayout'
 import LandingPage from '../pages/LandingPage'
+import { useSelector } from 'react-redux'
+import { RootState } from '../lib/redux/store'
+import ErrorPage from '../pages/ErrorPage/ErrorPage'
+import Dashboard from '../pages/Dashboard/Dashboard'
 
 const Router: React.FC = () => {
+  const role = useSelector((state: RootState) => state.user.value.role)
   const userRoutes = [
     {
       path: '/',
       element: (
         <MainLayout>
-          <LandingPage />
+          <Dashboard />
+        </MainLayout>
+      ),
+      errorElement: <ErrorPage />
+    },
+    {
+      path: '*',
+      element: <ErrorPage />,
+      errorElement: <ErrorPage />
+    }
+  ]
+
+  const guestRoutes = [
+    {
+      path: '/',
+      element: <LandingPage />,
+      errorElement: <ErrorPage />
+    },
+    {
+      path: '*',
+      element: <ErrorPage />,
+      errorElement: <ErrorPage />
+    }
+  ]
+  const adminRoutes = [
+    {
+      path: '/',
+      element: (
+        <MainLayout>
+          <p>Đây là trang Admin</p>
         </MainLayout>
       ),
       errorElement: (
@@ -19,20 +53,14 @@ const Router: React.FC = () => {
       )
     },
     {
-      path: '/login',
-      element: (
-        <MainLayout>
-          <LandingPage />
-        </MainLayout>
-      ),
-      errorElement: (
-        <div>
-          <h1>Home Error</h1>
-        </div>
-      )
-    },
+      path: '*',
+      element: <ErrorPage />,
+      errorElement: <ErrorPage />
+    }
   ]
-  const router = createBrowserRouter(userRoutes)
+  const routes = role === 'STUDENT' ? userRoutes : role === 'ADMIN' ? adminRoutes : guestRoutes
+
+  const router = createBrowserRouter(routes)
   return <RouterProvider router={router} />
 }
 
