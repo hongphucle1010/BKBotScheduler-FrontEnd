@@ -1,7 +1,7 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import MainLayout from '../layout/MainLayout/MainLayout'
-import LandingPage from '../pages/LandingPage'
+import LandingPage from '../pages/LandingPage/LandingPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../lib/redux/store'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
