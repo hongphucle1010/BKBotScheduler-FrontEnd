@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 // import Footer from "../../components/Footer/Footer.tsx";
-import GuestHeader from '../../components/Header/GuestHeader.tsx'
+import GuestHeader from '../../components/Header/GuestHeader'
 
 const GuestLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
