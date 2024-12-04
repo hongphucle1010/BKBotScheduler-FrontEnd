@@ -1,6 +1,6 @@
 import React from 'react'
-import logo from '../assets/Logo.png'
-import ggLogo from '../assets/gg-logo.png'
+import logo from '../../assets/Logo.png'
+import ggLogo from '../../assets/gg-logo.png'
 
 const LandingPage: React.FC = () => {
   return (
@@ -10,8 +10,8 @@ const LandingPage: React.FC = () => {
         <span>BKBotScheduler</span>
       </div>
 
-      <div></div>
       <button className='p-2 bg-gray-300 rounded-full font-semibold '>
+        <img src={ggLogo} alt='google logo' />
         <span>Sign in with Google</span>
       </button>
     </div>
