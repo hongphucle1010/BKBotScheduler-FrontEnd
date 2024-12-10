@@ -3,7 +3,7 @@ import logo from '../../assets/LandingPage/Logo.png'
 import studentImg from '../../assets/LandingPage/student.png'
 import SigninButtonGG from '../../components/LandingPage/signinGG.tsx'
 
-const LandingPage: React.FC<LayoutProps> = () => {
+const LandingPage: React.FC = () => {
   return (
     <div className='flex flex-col justify-between h-screen'>
       <div className='flex items-center justify-between py-6 px-20'>
