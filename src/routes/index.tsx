@@ -1,11 +1,11 @@
 import React from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import MainLayout from '../layout/MainLayout/MainLayout'
-import LandingPage from '../pages/LandingPage/LandingPage'
 import { useSelector } from 'react-redux'
 import { RootState } from '../lib/redux/store'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
 import Dashboard from '../pages/Dashboard/Dashboard'
+import LandingPage from '../pages/LandingPage/LandingPage'
 
 const Router: React.FC = () => {
   const role = useSelector((state: RootState) => state.user.value.role)
