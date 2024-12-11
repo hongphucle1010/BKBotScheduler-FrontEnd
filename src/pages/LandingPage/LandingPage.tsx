@@ -3,12 +3,14 @@ import logo from '../../assets/LandingPage/Logo.png'
 import studentImg from '../../assets/LandingPage/student.png'
 import SigninButtonGG from '../../components/LandingPage/signinGG.tsx'
 import { useGoogleOneTapLogin } from '@react-oauth/google'
-import { logInWithGoogleOneTapApi } from '../../api/authentication/authentication.ts'
+import { useDispatch } from 'react-redux'
+import { logInWithGoogleOneTap } from '../../lib/helper/authentication.ts'
 
 const LandingPage: React.FC = () => {
+  const dispatch = useDispatch()
   useGoogleOneTapLogin({
     onSuccess: async (credentialResponse) => {
-      await logInWithGoogleOneTapApi(credentialResponse)
+      await logInWithGoogleOneTap(credentialResponse, dispatch)
     },
     onError: () => {
       console.log('Login Failed')

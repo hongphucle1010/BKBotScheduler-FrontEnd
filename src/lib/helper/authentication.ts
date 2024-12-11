@@ -1,7 +1,8 @@
-import { TokenResponse } from '@react-oauth/google'
 import { Dispatch } from '@reduxjs/toolkit'
-import { fetchUserInfo } from '../../api/authentication/authentication'
+import { logInWithGoogleApi, logInWithGoogleOneTapApi } from '../../api/authentication/authentication'
 import { logInReducer } from '../redux/reducers/userState'
+import { GoogleLoginCodeResponse } from '../../api/authentication/types'
+import { CredentialResponse } from '@react-oauth/google'
 
 export function setAccessToken(token: string) {
   localStorage.setItem('accessToken', token)
@@ -27,12 +28,24 @@ export function clearRefreshToken() {
   localStorage.removeItem('refreshToken')
 }
 
-export async function logInWithGoogle(
-  codeResponse: Omit<TokenResponse, 'error' | 'error_description' | 'error_uri'>,
-  dispatch: Dispatch
-) {
-  setAccessToken(codeResponse.access_token)
-  fetchUserInfo().then((userInfo) => {
+export async function logInWithGoogle(codeResponse: GoogleLoginCodeResponse, dispatch: Dispatch) {
+  logInWithGoogleApi(codeResponse.access_token).then((userInfo) => {
+    console.log('User info:', userInfo)
+    dispatch(
+      logInReducer({
+        id: userInfo.id,
+        name: userInfo.name,
+        role: 'STUDENT',
+        email: userInfo.email,
+        avatar: userInfo.picture
+      })
+    )
+  })
+}
+
+export async function logInWithGoogleOneTap(credentialResponse: CredentialResponse, dispatch: Dispatch) {
+  logInWithGoogleOneTapApi(credentialResponse).then((userInfo) => {
+    if (!userInfo) return
     console.log('User info:', userInfo)
     dispatch(
       logInReducer({

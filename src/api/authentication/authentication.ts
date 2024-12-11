@@ -1,28 +1,67 @@
 import { CredentialResponse } from '@react-oauth/google'
-import axios from 'axios'
-import { getAccessToken } from '../../lib/helper/authentication'
-import { apiClient } from '..'
+import axios, { AxiosError } from 'axios'
+import {
+  GoogleAuthPayload,
+  LogInWithGoogleOneTapRequest,
+  LogInWithGoogleOneTapResponse,
+  UserInfoResponse
+} from './types'
+import { jwtDecode } from 'jwt-decode'
 
 export async function logInWithGoogleOneTapApi(credentialResponse: CredentialResponse) {
   try {
     const credential: LogInWithGoogleOneTapRequest = {
       credential: credentialResponse.credential
     }
-    const response = await apiClient.post<LogInWithGoogleOneTapResponse>('/auth/google/one-tap', {
-      credential
-    })
+    // const response = await apiClient.post<LogInWithGoogleOneTapResponse>('/auth/google/one-tap', {
+    //   credential
+    // })
+    const fakeApi = async (credential: LogInWithGoogleOneTapRequest): Promise<LogInWithGoogleOneTapResponse | null> => {
+      console.log(credential.credential && jwtDecode(credential.credential))
+      const decodePayload = credential.credential ? jwtDecode<GoogleAuthPayload>(credential.credential) : null
+      if (!decodePayload) return null
+      return {
+        id: '123',
+        access_token: '',
+        refresh_token: '',
+        email: decodePayload.email,
+        verified_email: decodePayload.email_verified,
+        name: decodePayload.name,
+        given_name: decodePayload.given_name,
+        family_name: decodePayload.family_name,
+        picture: decodePayload.picture,
+        hd: decodePayload.hd
+      }
+    }
+    const response = await fakeApi(credential)
     return response
   } catch (error) {
-    console.error(error)
+    if (error instanceof AxiosError) {
+      console.error('Axios error: ', error)
+      throw new Error(error.response?.data)
+    } else console.error(error)
     throw new Error('Login failed')
   }
 }
 
-export async function fetchUserInfo() {
+export async function logInWithGoogleApi(access_token: string) {
+  try {
+    const response = await fetchUserInfo(access_token)
+    return response
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error('Axios error: ', error)
+      throw new Error(error.response?.data)
+    } else console.error(error)
+    throw new Error('Login failed')
+  }
+}
+
+export async function fetchUserInfo(access_token: string) {
   try {
     const response = await axios.get<UserInfoResponse>('https://www.googleapis.com/oauth2/v1/userinfo', {
       headers: {
-        Authorization: `Bearer ${getAccessToken()}`
+        Authorization: `Bearer ${access_token}`
       }
     })
     return response.data
