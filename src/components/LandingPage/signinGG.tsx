@@ -15,7 +15,7 @@ const SigninButtonGG: React.FC = () => {
   return (
     <button className='p-2 bg-gray-200 rounded-full font-semibold flex gap-2 items-center' onClick={() => login()}>
       <img src={ggLogo} alt='google logo' />
-      <span>Sign in with Google</span>
+      <span className='text-sm md:text-base'>Sign in with Google</span>
     </button>
   )
 }

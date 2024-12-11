@@ -1,0 +1,9 @@
+.footer {
+  font-size: xx-small;
+}
+
+@media (min-width: 640px) {
+  .footer {
+    font-size: small;
+  }
+}
