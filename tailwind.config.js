@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {},
     fontFamily: {
-      sans: ['Roboto', 'sans-serif']
+      sans: ['Open Sans', 'sans-serif']
     }
   },
   plugins: [flowbiteReact.plugin(), plugin],
