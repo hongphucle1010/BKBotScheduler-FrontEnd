@@ -6,6 +6,8 @@ interface AuthorizationState {
     id: string
     name: string
     role: Role
+    email: string
+    avatar: string
   }
 }
 
@@ -15,7 +17,9 @@ const authorization = createSlice({
     value: {
       id: '',
       name: '',
-      role: 'GUEST' as Role
+      role: 'GUEST' as Role,
+      email: '',
+      avatar: ''
     }
   },
   reducers: {
@@ -23,6 +27,8 @@ const authorization = createSlice({
       state.value.id = ''
       state.value.name = ''
       state.value.role = 'GUEST'
+      state.value.email = ''
+      state.value.avatar = ''
     },
     logInReducer: (state: AuthorizationState, action: PayloadAction<User>) => {
       state.value = action.payload
