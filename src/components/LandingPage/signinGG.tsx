@@ -1,29 +1,13 @@
-// import { GoogleLogin } from '@react-oauth/google'
-
-// const SigninButtonGG: React.FC = () => {
-//   return (
-//     <GoogleLogin
-//       onSuccess={(credentialResponse) => {
-//         console.log(credentialResponse)
-//       }}
-//       onError={() => {
-//         console.log('Login Failed')
-//       }}
-//       auto_select
-//       shape='pill'
-//     />
-//   )
-// }
-
-// export default SigninButtonGG
-
 import { useGoogleLogin } from '@react-oauth/google'
 import ggLogo from '../../assets/LandingPage/gg-logo.png'
+import { useDispatch } from 'react-redux'
+import { logInWithGoogle } from '../../lib/helper/authentication'
 
 const SigninButtonGG: React.FC = () => {
+  const dispatch = useDispatch()
   const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      console.log(codeResponse)
+    onSuccess: async (codeResponse) => {
+      await logInWithGoogle(codeResponse, dispatch)
     },
     hosted_domain: 'hcmut.edu.vn'
   })

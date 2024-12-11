@@ -3,11 +3,12 @@ import logo from '../../assets/LandingPage/Logo.png'
 import studentImg from '../../assets/LandingPage/student.png'
 import SigninButtonGG from '../../components/LandingPage/signinGG.tsx'
 import { useGoogleOneTapLogin } from '@react-oauth/google'
+import { logInWithGoogleOneTapApi } from '../../api/authentication/authentication.ts'
 
 const LandingPage: React.FC = () => {
   useGoogleOneTapLogin({
-    onSuccess: (credentialResponse) => {
-      console.log(credentialResponse)
+    onSuccess: async (credentialResponse) => {
+      await logInWithGoogleOneTapApi(credentialResponse)
     },
     onError: () => {
       console.log('Login Failed')
