@@ -55,7 +55,13 @@ const MessageBox = () => {
 
   return (
     <>
-      <div ref={chatBoxRef} className='flex flex-col flex-1 gap-3 justify-end overflow-y-auto'>
+      <div
+        ref={chatBoxRef}
+        className='gap-3 flex-1 justify-end overflow-y-auto beautiful-scrollbar'
+        style={{
+          height: '80%'
+        }}
+      >
         {messageList.map((pair, index) => (
           <>
             <MessageElement key={`${index}_0`} text={pair[0].content} isLeft={false} />
