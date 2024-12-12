@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Role, User } from './types'
+import { clearAllTokens } from '../../helper/authentication'
 
 interface AuthorizationState {
   value: {
@@ -29,6 +30,8 @@ const authorization = createSlice({
       state.value.role = 'GUEST'
       state.value.email = ''
       state.value.avatar = ''
+      clearAllTokens()
+      window.location.href = '/'
     },
     logInReducer: (state: AuthorizationState, action: PayloadAction<User>) => {
       state.value = action.payload
