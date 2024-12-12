@@ -1,11 +1,6 @@
 import { CredentialResponse } from '@react-oauth/google'
 import axios, { AxiosError } from 'axios'
-import {
-  GoogleAuthPayload,
-  LogInWithGoogleOneTapRequest,
-  LogInWithGoogleOneTapResponse,
-  UserInfoResponse
-} from './types'
+import { GoogleAuthPayload, LogInWithGoogleOneTapRequest, LogInWithGoogleResponse, UserInfoResponse } from './types'
 import { jwtDecode } from 'jwt-decode'
 
 export async function logInWithGoogleOneTapApi(credentialResponse: CredentialResponse) {
@@ -16,7 +11,7 @@ export async function logInWithGoogleOneTapApi(credentialResponse: CredentialRes
     // const response = await apiClient.post<LogInWithGoogleOneTapResponse>('/auth/google/one-tap', {
     //   credential
     // })
-    const fakeApi = async (credential: LogInWithGoogleOneTapRequest): Promise<LogInWithGoogleOneTapResponse | null> => {
+    const fakeApi = async (credential: LogInWithGoogleOneTapRequest): Promise<LogInWithGoogleResponse | null> => {
       console.log(credential.credential && jwtDecode(credential.credential))
       const decodePayload = credential.credential ? jwtDecode<GoogleAuthPayload>(credential.credential) : null
       if (!decodePayload) return null
@@ -46,7 +41,10 @@ export async function logInWithGoogleOneTapApi(credentialResponse: CredentialRes
 
 export async function logInWithGoogleApi(access_token: string) {
   try {
-    const response = await fetchUserInfo(access_token)
+    // const response = await apiClient.post<LogInWithGoogleResponse>('/auth/google', {
+    //   token: access_token
+    // })
+    const response: LogInWithGoogleResponse = await fetchUserInfo(access_token)
     return response
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -64,7 +62,8 @@ export async function fetchUserInfo(access_token: string) {
         Authorization: `Bearer ${access_token}`
       }
     })
-    return response.data
+    const responseWithToken: LogInWithGoogleResponse = { ...response.data, access_token, refresh_token: '' }
+    return responseWithToken
   } catch (error) {
     console.error('Failed to fetch user info: ', error)
     throw error
