@@ -1,8 +1,9 @@
 import { Dispatch } from '@reduxjs/toolkit'
 import { logInWithGoogleApi, logInWithGoogleOneTapApi } from '../../api/authentication/authentication'
-import { logInReducer } from '../redux/reducers/userState'
+import { logInReducer, logOutReducer } from '../redux/reducers/userState'
 import { GoogleLoginCodeResponse } from '../../api/authentication/types'
 import { CredentialResponse } from '@react-oauth/google'
+import { clearMessages } from '../redux/reducers/message'
 
 export function setAccessToken(token: string) {
   localStorage.setItem('accessToken', token)
@@ -64,4 +65,9 @@ export async function logInWithGoogleOneTap(credentialResponse: CredentialRespon
     setAccessToken(userInfo.access_token)
     setRefreshToken(userInfo.refresh_token)
   })
+}
+
+export function logOut(dispatch: Dispatch) {
+  dispatch(logOutReducer())
+  dispatch(clearMessages())
 }

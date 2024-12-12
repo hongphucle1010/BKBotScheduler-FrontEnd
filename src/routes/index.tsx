@@ -7,6 +7,7 @@ import ErrorPage from '../pages/ErrorPage/ErrorPage'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import LandingPage from '../pages/LandingPage/LandingPage'
 import LogOut from '../pages/TestingPage/LogOut'
+import Chatbot from '../pages/Chatbot/Chatbot'
 
 const Router: React.FC = () => {
   const role = useSelector((state: RootState) => state.user.value.role)
@@ -16,6 +17,15 @@ const Router: React.FC = () => {
       element: (
         <MainLayout>
           <Dashboard />
+        </MainLayout>
+      ),
+      errorElement: <ErrorPage />
+    },
+    {
+      path: '/chat',
+      element: (
+        <MainLayout>
+          <Chatbot />
         </MainLayout>
       ),
       errorElement: <ErrorPage />
