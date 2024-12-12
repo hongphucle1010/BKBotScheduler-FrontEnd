@@ -28,9 +28,13 @@ export function clearRefreshToken() {
   localStorage.removeItem('refreshToken')
 }
 
+export function clearAllTokens() {
+  clearAccessToken()
+  clearRefreshToken()
+}
+
 export async function logInWithGoogle(codeResponse: GoogleLoginCodeResponse, dispatch: Dispatch) {
   logInWithGoogleApi(codeResponse.access_token).then((userInfo) => {
-    console.log('User info:', userInfo)
     dispatch(
       logInReducer({
         id: userInfo.id,
@@ -40,13 +44,14 @@ export async function logInWithGoogle(codeResponse: GoogleLoginCodeResponse, dis
         avatar: userInfo.picture
       })
     )
+    setAccessToken(userInfo.access_token)
+    setRefreshToken(userInfo.refresh_token)
   })
 }
 
 export async function logInWithGoogleOneTap(credentialResponse: CredentialResponse, dispatch: Dispatch) {
   logInWithGoogleOneTapApi(credentialResponse).then((userInfo) => {
     if (!userInfo) return
-    console.log('User info:', userInfo)
     dispatch(
       logInReducer({
         id: userInfo.id,
@@ -56,5 +61,7 @@ export async function logInWithGoogleOneTap(credentialResponse: CredentialRespon
         avatar: userInfo.picture
       })
     )
+    setAccessToken(userInfo.access_token)
+    setRefreshToken(userInfo.refresh_token)
   })
 }

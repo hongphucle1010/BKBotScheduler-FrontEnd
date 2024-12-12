@@ -6,6 +6,7 @@ import { RootState } from '../lib/redux/store'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import LandingPage from '../pages/LandingPage/LandingPage'
+import LogOut from '../pages/TestingPage/LogOut'
 
 const Router: React.FC = () => {
   const role = useSelector((state: RootState) => state.user.value.role)
@@ -15,6 +16,15 @@ const Router: React.FC = () => {
       element: (
         <MainLayout>
           <Dashboard />
+        </MainLayout>
+      ),
+      errorElement: <ErrorPage />
+    },
+    {
+      path: '/logout',
+      element: (
+        <MainLayout>
+          <LogOut />
         </MainLayout>
       ),
       errorElement: <ErrorPage />
@@ -31,6 +41,10 @@ const Router: React.FC = () => {
       path: '/',
       element: <LandingPage />,
       errorElement: <ErrorPage />
+    },
+    {
+      path: '/logout',
+      element: <></>
     },
     {
       path: '*',

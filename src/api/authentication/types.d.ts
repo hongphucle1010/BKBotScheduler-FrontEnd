@@ -14,7 +14,7 @@ interface LogInWithGoogleOneTapRequest {
   credential: string | undefined
 }
 
-interface LogInWithGoogleOneTapResponse extends UserInfoResponse {
+interface LogInWithGoogleResponse extends UserInfoResponse {
   access_token: string
   refresh_token: string
 }
