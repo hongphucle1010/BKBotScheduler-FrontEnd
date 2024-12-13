@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { LuSendHorizonal } from 'react-icons/lu'
 import { useDispatch, useSelector } from 'react-redux'
 import { MessagePair } from '../../lib/redux/reducers/types'
-import { addMessagePair } from '../../lib/redux/reducers/message'
+import { addMessagePair, updateLastBotMessage } from '../../lib/redux/reducers/message'
 import { runGemini } from '../../api/gemini/gemini'
 import { RootState } from '../../lib/redux/store'
 
@@ -17,17 +17,18 @@ const MessageTypingArea = React.memo(() => {
     if (!message) {
       return
     }
-    const answer = await runGemini(message, messageList)
+    // Dispatch user's message with an empty bot reply
     const messagePair: MessagePair = [
-      {
-        content: message
-      },
-      {
-        content: answer
-      }
+      { content: message },
+      { content: '' } // Empty bot message as placeholder
     ]
     dispatch(addMessagePair(messagePair))
     setMessage('')
+
+    // Get the bot's response
+    const answer = await runGemini(message, messageList)
+    // Update the last bot message
+    dispatch(updateLastBotMessage(answer))
   }
 
   useEffect(() => {
