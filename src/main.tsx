@@ -7,6 +7,7 @@ import configurePersistedStore from './lib/redux/store/index.ts'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { GOOGLE_OAUTH_CLIENT_ID } from './lib/helper/constant.ts'
 
 const { store, persistor } = configurePersistedStore()
 
@@ -15,7 +16,7 @@ createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Flowbite>
-          <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID}>
+          <GoogleOAuthProvider clientId={GOOGLE_OAUTH_CLIENT_ID}>
             <App />
           </GoogleOAuthProvider>
         </Flowbite>

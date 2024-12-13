@@ -79,7 +79,7 @@ const Chatbot = () => {
     <div
       className='bg-purple-300 flex flex-col rounded-lg'
       style={{
-        width: '95%',
+        width: '90%',
         height: '95%',
         minHeight: '0',
         maxHeight: '95%'

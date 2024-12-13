@@ -1,29 +1,33 @@
 import { Button } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { LuSendHorizonal } from 'react-icons/lu'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { MessagePair } from '../../lib/redux/reducers/types'
 import { addMessagePair } from '../../lib/redux/reducers/message'
+import { runGemini } from '../../api/gemini/gemini'
+import { RootState } from '../../lib/redux/store'
 
 const MessageTypingArea = React.memo(() => {
   const [message, setMessage] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
+  const messageList = useSelector((state: RootState) => state.message.value)
 
-  const sendMessage = () => {
-    console.log(message)
+  const sendMessage = async () => {
+    if (!message) {
+      return
+    }
+    const answer = await runGemini(message, messageList)
     const messagePair: MessagePair = [
       {
         content: message
       },
       {
-        content: 'Hello'
+        content: answer
       }
     ]
     dispatch(addMessagePair(messagePair))
-    if (message) {
-      setMessage('')
-    }
+    setMessage('')
   }
 
   useEffect(() => {
