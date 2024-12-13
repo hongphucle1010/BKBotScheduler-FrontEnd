@@ -7,3 +7,9 @@ export interface User {
   email: string
   avatar: string
 }
+
+export interface Message {
+  content: string
+}
+
+export type MessagePair = [Message, Message]

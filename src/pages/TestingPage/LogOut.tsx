@@ -1,9 +1,9 @@
 import { useDispatch } from 'react-redux'
-import { logOutReducer } from '../../lib/redux/reducers/userState'
+import { logOut } from '../../lib/helper/authentication'
 
 const LogOut = () => {
   const dispatch = useDispatch()
-  dispatch(logOutReducer())
+  logOut(dispatch)
   return <></>
 }
 
