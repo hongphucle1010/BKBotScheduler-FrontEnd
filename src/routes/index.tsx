@@ -8,6 +8,8 @@ import Dashboard from '../pages/Dashboard/Dashboard'
 import LandingPage from '../pages/LandingPage/LandingPage'
 import LogOut from '../pages/TestingPage/LogOut'
 import Chatbot from '../pages/Chatbot/Chatbot'
+import GroupManagementPage from '../pages/GroupManagementPage/GroupManagementPage'
+import SettingPage from '../pages/SettingPage/SettingPage'
 
 const Router: React.FC = () => {
   const role = useSelector((state: RootState) => state.user.value.role)
@@ -22,10 +24,28 @@ const Router: React.FC = () => {
       errorElement: <ErrorPage />
     },
     {
+      path: '/group-management',
+      element: (
+        <MainLayout>
+          <GroupManagementPage />
+        </MainLayout>
+      ),
+      errorElement: <ErrorPage />
+    },
+    {
       path: '/chat',
       element: (
         <MainLayout>
           <Chatbot />
+        </MainLayout>
+      ),
+      errorElement: <ErrorPage />
+    },
+    {
+      path: '/settings',
+      element: (
+        <MainLayout>
+          <SettingPage />
         </MainLayout>
       ),
       errorElement: <ErrorPage />
