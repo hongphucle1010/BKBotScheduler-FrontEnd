@@ -12,6 +12,7 @@
 .beautiful-scrollbar::-webkit-scrollbar {
   width: 10px;
   background-color: #f5f5f5;
+  border-radius: 10px;
 }
 
 .beautiful-scrollbar::-webkit-scrollbar-thumb {
