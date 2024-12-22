@@ -1,14 +1,16 @@
-import { Sidebar as SidebarFlowbite } from 'flowbite-react'
+import { Avatar, Sidebar as SidebarFlowbite } from 'flowbite-react'
 import type { CustomFlowbiteTheme } from 'flowbite-react'
 import { HiMenu, HiOutlineViewGrid } from 'react-icons/hi'
 import { SiChatbot } from 'react-icons/si'
 import { HiOutlineUserGroup } from 'react-icons/hi2'
 import { useState, useRef, useEffect } from 'react'
 import { Flowbite } from 'flowbite-react'
-import upgrade from '../../assets/Sidebar/upgrade.png'
 import { IoAddCircleOutline } from 'react-icons/io5'
 import { IoMdSettings } from 'react-icons/io'
 import { MdLogout } from 'react-icons/md'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../lib/redux/store'
+import { Link } from 'react-router-dom'
 
 const customThemeSidebar: CustomFlowbiteTheme = {
   sidebar: {
@@ -33,6 +35,8 @@ const customThemeSidebar: CustomFlowbiteTheme = {
 }
 
 const Sidebar = () => {
+  const user = useSelector((state: RootState) => state.user.value)
+
   const [isCollapsed, setIsCollapsed] = useState(true) // Initially collapsed on mobile
   const [isDropdownOpen, setIsDropdownOpen] = useState(false) // State for dropdown visibility
   const dropdownRef = useRef<HTMLDivElement>(null) // Ref for the dropdown
@@ -59,11 +63,54 @@ const Sidebar = () => {
     }
   }, [dropdownRef])
 
+  interface Group {
+    name: string
+    description: string
+    members: number
+    leader: string
+    skills: string[]
+    projects: { name: string; status: string }[]
+    avatar: string
+  }
+
+  const groups: Group[] = [
+    {
+      name: 'CNPM - TN01',
+      description: 'Phát triển ứng dụng di động',
+      members: 10,
+      leader: 'PHÚC LÊ HỒNG',
+      skills: ['Java', 'Kotlin', 'React Native'],
+      projects: [
+        { name: 'Ứng dụng đặt hàng', status: 'Hoàn thành' },
+        { name: 'Ứng dụng học tập trực tuyến', status: 'Đang tiến hành' }
+      ],
+      avatar: ''
+    },
+    {
+      name: 'WebDev - 01',
+      description: 'Phát triển web front-end',
+      members: 8,
+      leader: 'Liêm Đỗ Thanh',
+      skills: ['HTML', 'CSS', 'JavaScript', 'React'],
+      projects: [
+        { name: 'Website thương mại điện tử', status: 'Đang lên kế hoạch' },
+        { name: 'Landing page giới thiệu sản phẩm', status: 'Hoàn thành' }
+      ],
+      avatar: ''
+    },
+    {
+      name: 'AI - 01',
+      description: 'Nghiên cứu và ứng dụng trí tuệ nhân tạo',
+      members: 5,
+      leader: 'Lê Văn C',
+      skills: ['Python', 'Machine Learning', 'Deep Learning'],
+      projects: [{ name: 'Hệ thống nhận diện khuôn mặt', status: 'Đang tiến hành' }],
+      avatar: ''
+    }
+  ]
+
   return (
     <div className='relative'>
-      {' '}
-      {/* Needed for absolute positioning of the button */}
-      {/* Mobile Toggle Button */}
       <button
         onClick={toggleSidebar}
         className='bg-red-600 fixed top-4 left-4 z-50 p-2 rounded-md focus:outline-none md:hidden'
@@ -80,8 +127,8 @@ const Sidebar = () => {
           <SidebarFlowbite.Items>
             <SidebarFlowbite.ItemGroup>
               <button onClick={toggleDropdown} className='w-full h-20 flex items-center pl-3 gap-2.5'>
-                <img src='' alt='' className='w-12 h-12' />
-                <p className='text-lg text-blue-800'>Hồng Phúc Lê</p>
+                <Avatar img={user.avatar} alt='User avatar' rounded />
+                <p className='text-lg text-blue-800'>{user.name}</p>
                 {isDropdownOpen && (
                   <div ref={dropdownRef} className='absolute top-20 left-20 bg-white rounded-xl shadow-lg z-50 w-52'>
                     <div className='p-2 pb-1'>
@@ -91,23 +138,23 @@ const Sidebar = () => {
                       </a>
                     </div>
                     <div className='p-2 pt-1'>
-                      <a href='#' className='px-2 hover:bg-orange-300 flex items-center gap-2 h-14 rounded-xl'>
+                      <Link to='/logout' className='px-2 hover:bg-orange-300 flex items-center gap-2 h-14 rounded-xl'>
                         <MdLogout className='w-6 h-6' />
                         <span className='text-2xl font-semibold'>Đăng xuất</span>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 )}
               </button>
             </SidebarFlowbite.ItemGroup>
             <SidebarFlowbite.ItemGroup>
-              <SidebarFlowbite.Item href='#' icon={HiOutlineViewGrid}>
+              <SidebarFlowbite.Item href='/' icon={HiOutlineViewGrid}>
                 Dashboard
               </SidebarFlowbite.Item>
-              <SidebarFlowbite.Item href='#' icon={SiChatbot}>
+              <SidebarFlowbite.Item href='/chat' icon={SiChatbot}>
                 Chatbot
               </SidebarFlowbite.Item>
-              <SidebarFlowbite.Item href='#' icon={HiOutlineUserGroup}>
+              <SidebarFlowbite.Item href='/group-management' icon={HiOutlineUserGroup}>
                 Nhóm
               </SidebarFlowbite.Item>
             </SidebarFlowbite.ItemGroup>
@@ -118,60 +165,17 @@ const Sidebar = () => {
                   <IoAddCircleOutline className='w-5 h-5' />
                 </button>
               </div>
-              <div className='w-full h-40 overflow-y-auto'>
-                <SidebarFlowbite.Item href='#'>
-                  <div className='flex gap-3 items-center'>
-                    <img src='' alt='' className='w-6 h-6' />
-                    <p>CNPM - TN01</p>
-                  </div>
-                </SidebarFlowbite.Item>
-                <SidebarFlowbite.Item href='#'>
-                  <div className='flex gap-3 items-center'>
-                    <img src='' alt='' className='w-6 h-6' />
-                    <p>CNPM - TN01</p>
-                  </div>
-                </SidebarFlowbite.Item>
-                <SidebarFlowbite.Item href='#'>
-                  <div className='flex gap-3 items-center'>
-                    <img src='' alt='' className='w-6 h-6' />
-                    <p>CNPM - TN01</p>
-                  </div>
-                </SidebarFlowbite.Item>
-                <SidebarFlowbite.Item href='#'>
-                  <div className='flex gap-3 items-center'>
-                    <img src='' alt='' className='w-6 h-6' />
-                    <p>CNPM - TN01</p>
-                  </div>
-                </SidebarFlowbite.Item>
-                <SidebarFlowbite.Item href='#'>
-                  <div className='flex gap-3 items-center'>
-                    <img src='' alt='' className='w-6 h-6' />
-                    <p>CNPM - TN01</p>
-                  </div>
-                </SidebarFlowbite.Item>
-                <SidebarFlowbite.Item href='#'>
-                  <div className='flex gap-3 items-center'>
-                    <img src='' alt='' className='w-6 h-6' />
-                    <p>CNPM - TN01</p>
-                  </div>
-                </SidebarFlowbite.Item>
-                <SidebarFlowbite.Item href='#'>
-                  <div className='flex gap-3 items-center'>
-                    <img src='' alt='' className='w-6 h-6' />
-                    <p>CNPM - TN01</p>
-                  </div>
-                </SidebarFlowbite.Item>
+              <div className='w-full h-40 overflow-y-auto beautiful-scrollbar'>
+                {groups.map((group) => (
+                  <SidebarFlowbite.Item href='#' key={group.name}>
+                    <div className='flex gap-3 items-center'>
+                      <Avatar img={group.avatar} alt='Group avatar' size='sm' />
+                      <p>{group.name}</p>
+                    </div>
+                  </SidebarFlowbite.Item>
+                ))}
               </div>
             </SidebarFlowbite.ItemGroup>
-            <div className='w-full h-24 pt-4 flex flex-col items-center'>
-              <img src={upgrade} alt='' className='w-full' />
-              <p className='text-lg text-center text-blue-800 pb-2'>Nâng cấp để trải nghiệm phân tích AI vượt trội</p>
-              <button className='rounded-3xl bg-cyan-100 shadow-xl hover:bg-orange-300'>
-                <span className='text-blue-500 w-36 h-12 flex items-center justify-center font-semibold hover:text-red-600'>
-                  Nâng cấp
-                </span>
-              </button>
-            </div>
           </SidebarFlowbite.Items>
         </SidebarFlowbite>
       </Flowbite>
