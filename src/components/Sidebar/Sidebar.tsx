@@ -10,7 +10,7 @@ import { IoMdSettings } from 'react-icons/io'
 import { MdLogout } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../lib/redux/store'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const customThemeSidebar: CustomFlowbiteTheme = {
   sidebar: {
@@ -34,7 +34,20 @@ const customThemeSidebar: CustomFlowbiteTheme = {
   }
 }
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
+  const navigate = useNavigate() // Hook for programmatic navigation
+
+  const handleRedirect = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault() // Prevent default link behavior
+
+    const href = event.currentTarget.getAttribute('href')
+
+    if (href) {
+      // Check if href exists
+      navigate(href)
+    }
+  }
+
   const user = useSelector((state: RootState) => state.user.value)
 
   const [isCollapsed, setIsCollapsed] = useState(true) // Initially collapsed on mobile
@@ -130,17 +143,24 @@ const Sidebar = () => {
                 <Avatar img={user.avatar} alt='User avatar' rounded />
                 <p className='text-lg text-blue-800'>{user.name}</p>
                 {isDropdownOpen && (
-                  <div ref={dropdownRef} className='absolute top-20 left-20 bg-white rounded-xl shadow-lg z-50 w-52'>
+                  <div
+                    ref={dropdownRef}
+                    className='absolute top-36 md:top-20 left-20 bg-white rounded-xl shadow-lg z-50 w-42'
+                  >
                     <div className='p-2 pb-1'>
-                      <a href='#' className='pl-2 hover:bg-orange-300 flex items-center gap-2 h-14 rounded-xl'>
-                        <IoMdSettings className='w-6 h-6' />
-                        <span className='text-2xl font-semibold'>Cài đặt</span>
+                      <a
+                        href='#'
+                        onClick={handleRedirect}
+                        className='pl-2 hover:bg-orange-300 flex items-center gap-2 h-10 rounded-xl'
+                      >
+                        <IoMdSettings className='w-5 h-5' />
+                        <span className='text-xl font-semibold'>Cài đặt</span>
                       </a>
                     </div>
                     <div className='p-2 pt-1'>
-                      <Link to='/logout' className='px-2 hover:bg-orange-300 flex items-center gap-2 h-14 rounded-xl'>
-                        <MdLogout className='w-6 h-6' />
-                        <span className='text-2xl font-semibold'>Đăng xuất</span>
+                      <Link to='/logout' className='px-2 hover:bg-orange-300 flex items-center gap-2 h-10 rounded-xl'>
+                        <MdLogout className='w-5 h-5' />
+                        <span className='text-xl font-semibold'>Đăng xuất</span>
                       </Link>
                     </div>
                   </div>
@@ -148,13 +168,13 @@ const Sidebar = () => {
               </button>
             </SidebarFlowbite.ItemGroup>
             <SidebarFlowbite.ItemGroup>
-              <SidebarFlowbite.Item href='/' icon={HiOutlineViewGrid}>
+              <SidebarFlowbite.Item href='/' icon={HiOutlineViewGrid} onClick={handleRedirect}>
                 Dashboard
               </SidebarFlowbite.Item>
-              <SidebarFlowbite.Item href='/chat' icon={SiChatbot}>
+              <SidebarFlowbite.Item href='/chat' icon={SiChatbot} onClick={handleRedirect}>
                 Chatbot
               </SidebarFlowbite.Item>
-              <SidebarFlowbite.Item href='/group-management' icon={HiOutlineUserGroup}>
+              <SidebarFlowbite.Item href='/group-management' icon={HiOutlineUserGroup} onClick={handleRedirect}>
                 Nhóm
               </SidebarFlowbite.Item>
             </SidebarFlowbite.ItemGroup>
@@ -167,7 +187,7 @@ const Sidebar = () => {
               </div>
               <div className='w-full h-40 overflow-y-auto beautiful-scrollbar'>
                 {groups.map((group) => (
-                  <SidebarFlowbite.Item href='#' key={group.name}>
+                  <SidebarFlowbite.Item href='#' onClick={handleRedirect} key={group.name}>
                     <div className='flex gap-3 items-center'>
                       <Avatar img={group.avatar} alt='Group avatar' size='sm' />
                       <p>{group.name}</p>
