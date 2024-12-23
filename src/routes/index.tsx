@@ -10,6 +10,7 @@ import LogOut from '../pages/TestingPage/LogOut'
 import Chatbot from '../pages/Chatbot/Chatbot'
 import GroupManagementPage from '../pages/GroupManagementPage/GroupManagementPage'
 import SettingPage from '../pages/SettingPage/SettingPage'
+import PersonalEvent from '../pages/PersonalEvent/PersonalEvent'
 
 const Router: React.FC = () => {
   const role = useSelector((state: RootState) => state.user.value.role)
@@ -55,6 +56,15 @@ const Router: React.FC = () => {
       element: (
         <MainLayout>
           <LogOut />
+        </MainLayout>
+      ),
+      errorElement: <ErrorPage />
+    },
+    {
+      path: '/personal-event',
+      element: (
+        <MainLayout>
+          <PersonalEvent />
         </MainLayout>
       ),
       errorElement: <ErrorPage />
