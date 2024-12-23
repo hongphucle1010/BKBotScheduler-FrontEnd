@@ -9,9 +9,9 @@ const ScrollToBottomButton = ({ scrollToBottom }: { scrollToBottom: () => void }
   return (
     <button
       onClick={scrollToBottom}
-      className='p-0 fixed z-20 bottom-8 left-1/2 -translate-x-1/2 -translate-y-1/2 active:text-blue-700 dark:active:text-cyan-500'
+      className='p-0 fixed z-20 bottom-20 left-1/2 -translate-x-1/2 -translate-y-1/2 active:text-blue-700 dark:active:text-cyan-500'
     >
-      <FaArrowCircleDown className='text-3xl opacity-30' />
+      <FaArrowCircleDown className='text-3xl opacity-30 bg-transparent' />
     </button>
   )
 }
@@ -76,17 +76,19 @@ const MessageBox = () => {
 
 const Chatbot = () => {
   return (
-    <div
-      className='bg-purple-300 flex flex-col rounded-lg'
-      style={{
-        width: '90%',
-        height: '95%',
-        minHeight: '0',
-        maxHeight: '95%'
-      }}
-    >
-      <MessageBox />
-      <MessageTypingArea />
+    <div className='flex w-full h-full items-center justify-center'>
+      <div
+        className='bg-purple-300 flex flex-col rounded-2xl shadow-2xl'
+        style={{
+          width: '90%',
+          height: '95%',
+          minHeight: '0',
+          maxHeight: '95%'
+        }}
+      >
+        <MessageBox />
+        <MessageTypingArea />
+      </div>
     </div>
   )
 }
