@@ -1,8 +1,8 @@
 import { Button, Progress } from 'flowbite-react'
 import { useNavigate } from 'react-router-dom'
 import { HiOutlineArrowRight } from 'react-icons/hi'
-// import { useState } from 'react'
-// import styles from './Dashboard.module.css'
+import { useState } from 'react'
+import styles from './Dashboard.module.css'
 
 const Navigation: React.FC = () => {
   const navigate = useNavigate()
@@ -91,26 +91,27 @@ interface TaskProps {
 }
 
 const Task: React.FC<TaskProps> = ({ title, description, deadline }) => {
-  // const [isFinished, setIsFinished] = useState(false)
+  const [isFinishing, setIsFinishing] = useState(false)
+  const [isHidden, setIsHidden] = useState(false)
 
-  // const finishTask = () => {
-  //   setIsFinished(true)
-  // }
-
-  const finishTask = (event: React.MouseEvent<HTMLDivElement>) => {
-    const task = event.currentTarget
-    task.classList.add('hidden')
+  const finishTask = () => {
+    setIsFinishing(true)
+    setTimeout(() => setIsHidden(true), 700)
   }
 
   return (
-    <div
-      className='w-full rounded-3xl bg-white shadow-lg px-4 py-3 transition-all duration-500 cursor-pointer'
-      onClick={finishTask}
-    >
-      <h3 className='text-xl text-blue-600'>{title}</h3>
-      <p>{description}</p>
-      <p>Deadline: {deadline.toLocaleDateString()}</p>
-    </div>
+    !isHidden && (
+      <div
+        className={`${styles.task} w-full rounded-3xl bg-white shadow-lg px-4 py-3 cursor-pointer ${
+          isFinishing ? styles.taskFinishing : ''
+        }`}
+        onClick={finishTask}
+      >
+        <h3 className='text-xl text-blue-600'>{title}</h3>
+        <p>{description}</p>
+        <p>Deadline: {deadline.toLocaleDateString()}</p>
+      </div>
+    )
   )
 }
 
@@ -130,7 +131,7 @@ const TaskList: React.FC = () => {
   return (
     <div className='w-10/12 lg:w-5/12 bg-violet-300 rounded-3xl px-10 py-5 shadow-lg'>
       <p className='text-3xl text-black font-semibold pb-5'>Nhiệm vụ</p>
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-4 transition-all duration-500'>
         {tasks.map((task) => (
           <Task key={task.title} {...task} />
         ))}
@@ -141,7 +142,7 @@ const TaskList: React.FC = () => {
 
 const Dashboard: React.FC = () => {
   return (
-    <div className='flex flex-col items-center py-10 gap-12'>
+    <div className='flex flex-col items-center py-10 gap-12 overflow-x-hidden'>
       <div className='w-11/12 flex flex-col gap-12'>
         <Navigation />
         <div className='flex gap-20 flex-col lg:flex-row'>
