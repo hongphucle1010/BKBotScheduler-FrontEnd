@@ -7,7 +7,7 @@ export const MessageElement = ({ text, isLeft }: MessageElementProps) => {
     <div className={`flex gap-2.5 items-center my-3 ${isLeft ? '' : 'justify-end'} px-2`}>
       {isLeft && <Avatar rounded img={logo} className='flex-shrink-0' />}
       <div
-        className={`flex flex-col max-w-5/6 sm:max-w-4/6 leading-1.5 p-4 border-gray-200 ${
+        className={`flex flex-col max-w-5/6 sm:max-w-4/6 leading-1.5 px-2 border-gray-200 ${
           isLeft
             ? 'bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700'
             : 'bg-blue-500 rounded-s-xl rounded-ee-xl dark:bg-blue-600'
