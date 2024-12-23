@@ -10,7 +10,7 @@ export const MessageElement = ({ text, isLeft }: MessageElementProps) => {
         className={`flex flex-col max-w-5/6 sm:max-w-4/6 leading-1.5 p-4 border-gray-200 ${
           isLeft
             ? 'bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700'
-            : 'bg-blue-500 rounded-s-xl rounded-ee-xl dark:bg-blue-600'
+            : 'bg-blue-400 rounded-s-xl rounded-ee-xl dark:bg-blue-600'
         }`}
       >
         <p className='text-sm font-normal py-2.5 max-w-full text-gray-900 dark:text-white'>
