@@ -10,9 +10,7 @@ export async function logInWithGoogleOneTapApi(credentialResponse: CredentialRes
     const credential: LogInWithGoogleOneTapRequest = {
       credential: credentialResponse.credential
     }
-    const response = await apiClient.post<LogInWithGoogleResponse>('/auth/google/one-tap', {
-      credential
-    })
+    const response = await apiClient.post<LogInWithGoogleResponse>('/auth/google/one-tap', credential)
     // const fakeApi = async (credential: LogInWithGoogleOneTapRequest): Promise<LogInWithGoogleResponse | null> => {
     //   console.log(credential.credential && jwtDecode(credential.credential))
     //   const decodePayload = credential.credential ? jwtDecode<GoogleAuthPayload>(credential.credential) : null
@@ -31,7 +29,7 @@ export async function logInWithGoogleOneTapApi(credentialResponse: CredentialRes
     //   }
     // }
     // const response = await fakeApi(credential  )
-    return response
+    return response.data
   } catch (error) {
     if (error instanceof AxiosError) {
       console.error('Axios error: ', error)
@@ -43,9 +41,9 @@ export async function logInWithGoogleOneTapApi(credentialResponse: CredentialRes
 
 export async function logInWithGoogleApi(access_token: string) {
   try {
-    const response = await apiClient.get<LogInWithGoogleResponse>('/auth/google?token=' + access_token)
+    const response = await apiClient.get<LogInWithGoogleResponse>('/auth/google?code=' + access_token)
     // const response: LogInWithGoogleResponse = await fetchUserInfo(access_token)
-    return response
+    return response.data
   } catch (error) {
     if (error instanceof AxiosError) {
       console.error('Axios error: ', error)
