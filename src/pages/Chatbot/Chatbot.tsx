@@ -78,7 +78,7 @@ const Chatbot = () => {
   return (
     <div className='flex w-full h-full items-center justify-center'>
       <div
-        className='bg-purple-300 flex flex-col rounded-2xl shadow-2xl'
+        className='outline outline-offset-4 outline-1	outline-blue-500 bg-white flex flex-col rounded-2xl drop-shadow-2xl'
         style={{
           width: '90%',
           height: '95%',
