@@ -56,7 +56,7 @@ const MessageTypingArea = React.memo(() => {
         ref={inputRef}
         type='text'
         placeholder='Type a message'
-        className='flex-1 p-2.5 rounded-xl'
+        className='flex-1 p-2.5 rounded-xl text-sm'
         onChange={(e) => {
           setMessage(e.target.value)
         }}

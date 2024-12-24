@@ -10,7 +10,7 @@ const MainLayout: React.FC<LayoutProps> = ({ children }) => {
     <div className={`h-screen w-full flex overflow-hidden relative`}>
       <Sidebar />
       <div className='flex-1 overflow-auto p-0 m-0'>
-        <div className='w-full h-16 bg-teal-300 md:hidden'></div>
+        {/* <div className='w-full h-16 bg-teal-300 md:hidden'></div> */}
         {children}
       </div>
       <Outlet />

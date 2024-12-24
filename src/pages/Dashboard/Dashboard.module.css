@@ -1,0 +1,8 @@
+.task {
+  transition: transform 0.7s ease-in-out, opacity 0.7s ease-in-out;
+}
+
+.taskFinishing {
+  transform: translateX(100%);
+  opacity: 0;
+}

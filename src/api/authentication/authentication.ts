@@ -1,35 +1,35 @@
 import { CredentialResponse } from '@react-oauth/google'
 import axios, { AxiosError } from 'axios'
-import { GoogleAuthPayload, LogInWithGoogleOneTapRequest, LogInWithGoogleResponse, UserInfoResponse } from './types'
-import { jwtDecode } from 'jwt-decode'
+import { LogInWithGoogleOneTapRequest, LogInWithGoogleResponse, UserInfoResponse } from './types'
+// import { GoogleAuthPayload } from './types'
+// import { jwtDecode } from 'jwt-decode'
+import { apiClient } from '..'
 
 export async function logInWithGoogleOneTapApi(credentialResponse: CredentialResponse) {
   try {
     const credential: LogInWithGoogleOneTapRequest = {
       credential: credentialResponse.credential
     }
-    // const response = await apiClient.post<LogInWithGoogleOneTapResponse>('/auth/google/one-tap', {
-    //   credential
-    // })
-    const fakeApi = async (credential: LogInWithGoogleOneTapRequest): Promise<LogInWithGoogleResponse | null> => {
-      console.log(credential.credential && jwtDecode(credential.credential))
-      const decodePayload = credential.credential ? jwtDecode<GoogleAuthPayload>(credential.credential) : null
-      if (!decodePayload) return null
-      return {
-        id: '123',
-        access_token: '',
-        refresh_token: '',
-        email: decodePayload.email,
-        verified_email: decodePayload.email_verified,
-        name: decodePayload.name,
-        given_name: decodePayload.given_name,
-        family_name: decodePayload.family_name,
-        picture: decodePayload.picture,
-        hd: decodePayload.hd
-      }
-    }
-    const response = await fakeApi(credential)
-    return response
+    const response = await apiClient.post<LogInWithGoogleResponse>('/auth/google/one-tap', credential)
+    // const fakeApi = async (credential: LogInWithGoogleOneTapRequest): Promise<LogInWithGoogleResponse | null> => {
+    //   console.log(credential.credential && jwtDecode(credential.credential))
+    //   const decodePayload = credential.credential ? jwtDecode<GoogleAuthPayload>(credential.credential) : null
+    //   if (!decodePayload) return null
+    //   return {
+    //     id: '123',
+    //     access_token: '',
+    //     refresh_token: '',
+    //     email: decodePayload.email,
+    //     verified_email: decodePayload.email_verified,
+    //     name: decodePayload.name,
+    //     given_name: decodePayload.given_name,
+    //     family_name: decodePayload.family_name,
+    //     picture: decodePayload.picture,
+    //     hd: decodePayload.hd
+    //   }
+    // }
+    // const response = await fakeApi(credential  )
+    return response.data
   } catch (error) {
     if (error instanceof AxiosError) {
       console.error('Axios error: ', error)
@@ -41,11 +41,9 @@ export async function logInWithGoogleOneTapApi(credentialResponse: CredentialRes
 
 export async function logInWithGoogleApi(access_token: string) {
   try {
-    // const response = await apiClient.post<LogInWithGoogleResponse>('/auth/google', {
-    //   token: access_token
-    // })
-    const response: LogInWithGoogleResponse = await fetchUserInfo(access_token)
-    return response
+    const response = await apiClient.get<LogInWithGoogleResponse>('/auth/google?code=' + access_token)
+    // const response: LogInWithGoogleResponse = await fetchUserInfo(access_token)
+    return response.data
   } catch (error) {
     if (error instanceof AxiosError) {
       console.error('Axios error: ', error)

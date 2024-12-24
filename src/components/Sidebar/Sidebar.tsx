@@ -11,6 +11,7 @@ import { MdLogout } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../lib/redux/store'
 import { Link, useNavigate } from 'react-router-dom'
+import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb'
 
 const customThemeSidebar: CustomFlowbiteTheme = {
   sidebar: {
@@ -53,6 +54,7 @@ const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(true) // Initially collapsed on mobile
   const [isDropdownOpen, setIsDropdownOpen] = useState(false) // State for dropdown visibility
   const dropdownRef = useRef<HTMLDivElement>(null) // Ref for the dropdown
+  const sidebarRef = useRef<HTMLDivElement>(null) // Add ref for SidebarFlowbite
 
   const toggleSidebar = (): void => {
     setIsCollapsed(!isCollapsed)
@@ -75,6 +77,20 @@ const Sidebar: React.FC = () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [dropdownRef])
+
+  // Handle clicks outside the sidebar to collapse it
+  useEffect(() => {
+    const handleClickOutsideSidebar = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsCollapsed(true)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutsideSidebar)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideSidebar)
+    }
+  }, [sidebarRef])
 
   interface Group {
     name: string
@@ -124,80 +140,88 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className='relative'>
-      <button
-        onClick={toggleSidebar}
-        className='bg-red-600 fixed top-4 left-4 z-50 p-2 rounded-md focus:outline-none md:hidden'
-      >
-        <HiMenu className='h-6 w-6' />
-      </button>
-      <Flowbite theme={{ theme: customThemeSidebar }}>
-        <SidebarFlowbite
-          aria-label='Default sidebar example'
-          className={`fixed md:relative top-0 left-0 h-full z-40 pt-16 md:pt-0 transition-transform duration-300 ease-in-out ${
-            isCollapsed ? '-translate-x-full md:translate-x-0' : 'translate-x-0'
-          } `} // Added width and background color
+      {isCollapsed && (
+        <button
+          onClick={toggleSidebar}
+          className='bg-slate-50 border-blue-400 drop-shadow-lg fixed top-4 left-4 z-50 p-2 rounded-md focus:outline-none md:hidden'
         >
-          <SidebarFlowbite.Items>
-            <SidebarFlowbite.ItemGroup>
-              <button onClick={toggleDropdown} className='w-full h-20 flex items-center pl-3 gap-2.5'>
-                <Avatar img={user.avatar} alt='User avatar' rounded />
-                <p className='text-lg text-blue-800'>{user.name}</p>
-                {isDropdownOpen && (
-                  <div
-                    ref={dropdownRef}
-                    className='absolute top-36 md:top-20 left-20 bg-white rounded-xl shadow-lg z-50 w-42'
-                  >
-                    <div className='p-2 pb-1'>
-                      <a
-                        href='#'
-                        onClick={handleRedirect}
-                        className='pl-2 hover:bg-orange-300 flex items-center gap-2 h-10 rounded-xl'
-                      >
-                        <IoMdSettings className='w-5 h-5' />
-                        <span className='text-xl font-semibold'>Cài đặt</span>
-                      </a>
+          <HiMenu className='h-6 w-6' />
+        </button>
+      )}
+      <Flowbite theme={{ theme: customThemeSidebar }}>
+        <div ref={sidebarRef} className='h-full'>
+          <SidebarFlowbite
+            aria-label='Default sidebar example'
+            className={`fixed md:relative top-0 left-0 h-full z-40   md:pt-0 transition-transform duration-300 ease-in-out ${
+              isCollapsed ? '-translate-x-full md:translate-x-0' : 'translate-x-0'
+            } `} // Added width and background color
+          >
+            <TbLayoutSidebarLeftCollapseFilled
+              className='fixed bottom-4 right-2 text-4xl cursor-pointer md:hidden'
+              onClick={toggleSidebar}
+            />
+            <SidebarFlowbite.Items>
+              <SidebarFlowbite.ItemGroup>
+                <button onClick={toggleDropdown} className='w-full h-20 flex items-center pl-3 gap-2.5'>
+                  <Avatar img={user.avatar} alt='User avatar' rounded />
+                  <p className='text-lg text-blue-800'>{user.name}</p>
+                  {isDropdownOpen && (
+                    <div
+                      ref={dropdownRef}
+                      className='absolute top-36 md:top-20 left-20 bg-white rounded-xl shadow-lg z-50 w-42'
+                    >
+                      <div className='p-2 pb-1'>
+                        <a
+                          href='#'
+                          onClick={handleRedirect}
+                          className='pl-2 hover:bg-orange-300 flex items-center gap-2 h-10 rounded-xl'
+                        >
+                          <IoMdSettings className='w-5 h-5' />
+                          <span className='text-xl font-semibold'>Cài đặt</span>
+                        </a>
+                      </div>
+                      <div className='p-2 pt-1'>
+                        <Link to='/logout' className='px-2 hover:bg-orange-300 flex items-center gap-2 h-10 rounded-xl'>
+                          <MdLogout className='w-5 h-5' />
+                          <span className='text-xl font-semibold'>Đăng xuất</span>
+                        </Link>
+                      </div>
                     </div>
-                    <div className='p-2 pt-1'>
-                      <Link to='/logout' className='px-2 hover:bg-orange-300 flex items-center gap-2 h-10 rounded-xl'>
-                        <MdLogout className='w-5 h-5' />
-                        <span className='text-xl font-semibold'>Đăng xuất</span>
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </button>
-            </SidebarFlowbite.ItemGroup>
-            <SidebarFlowbite.ItemGroup>
-              <SidebarFlowbite.Item href='/' icon={HiOutlineViewGrid} onClick={handleRedirect}>
-                Dashboard
-              </SidebarFlowbite.Item>
-              <SidebarFlowbite.Item href='/chat' icon={SiChatbot} onClick={handleRedirect}>
-                Chatbot
-              </SidebarFlowbite.Item>
-              <SidebarFlowbite.Item href='/group-management' icon={HiOutlineUserGroup} onClick={handleRedirect}>
-                Nhóm
-              </SidebarFlowbite.Item>
-            </SidebarFlowbite.ItemGroup>
-            <SidebarFlowbite.ItemGroup>
-              <div className='flex justify-between px-4'>
-                <p className='text-md font-semibold'>Nhóm</p>
-                <button>
-                  <IoAddCircleOutline className='w-5 h-5' />
+                  )}
                 </button>
-              </div>
-              <div className='w-full h-40 overflow-y-auto beautiful-scrollbar'>
-                {groups.map((group) => (
-                  <SidebarFlowbite.Item href='#' onClick={handleRedirect} key={group.name}>
-                    <div className='flex gap-3 items-center'>
-                      <Avatar img={group.avatar} alt='Group avatar' size='sm' />
-                      <p>{group.name}</p>
-                    </div>
-                  </SidebarFlowbite.Item>
-                ))}
-              </div>
-            </SidebarFlowbite.ItemGroup>
-          </SidebarFlowbite.Items>
-        </SidebarFlowbite>
+              </SidebarFlowbite.ItemGroup>
+              <SidebarFlowbite.ItemGroup>
+                <SidebarFlowbite.Item href='/' icon={HiOutlineViewGrid} onClick={handleRedirect}>
+                  Dashboard
+                </SidebarFlowbite.Item>
+                <SidebarFlowbite.Item href='/chat' icon={SiChatbot} onClick={handleRedirect}>
+                  Chatbot
+                </SidebarFlowbite.Item>
+                <SidebarFlowbite.Item href='/group-management' icon={HiOutlineUserGroup} onClick={handleRedirect}>
+                  Nhóm
+                </SidebarFlowbite.Item>
+              </SidebarFlowbite.ItemGroup>
+              <SidebarFlowbite.ItemGroup>
+                <div className='flex justify-between px-4'>
+                  <p className='text-md font-semibold'>Nhóm</p>
+                  <button>
+                    <IoAddCircleOutline className='w-5 h-5' />
+                  </button>
+                </div>
+                <div className='w-full h-40 overflow-y-auto beautiful-scrollbar'>
+                  {groups.map((group) => (
+                    <SidebarFlowbite.Item href='#' onClick={handleRedirect} key={group.name}>
+                      <div className='flex gap-3 items-center'>
+                        <Avatar img={group.avatar} alt='Group avatar' size='sm' />
+                        <p>{group.name}</p>
+                      </div>
+                    </SidebarFlowbite.Item>
+                  ))}
+                </div>
+              </SidebarFlowbite.ItemGroup>
+            </SidebarFlowbite.Items>
+          </SidebarFlowbite>
+        </div>
       </Flowbite>
     </div>
   )
