@@ -2,9 +2,7 @@ import { useDispatch } from 'react-redux'
 import { logOut } from '../../lib/helper/authentication'
 
 const LogOut = () => {
-  const dispatch = useDispatch()
-  logOut(dispatch)
-  return <></>
+  return <h1>Meomeo</h1>
 }
 
 export default LogOut

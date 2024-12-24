@@ -25,6 +25,15 @@ const Router: React.FC = () => {
       errorElement: <ErrorPage />
     },
     {
+      path: '/logout',
+      element: (
+        <MainLayout>
+          <LogOut />
+        </MainLayout>
+      ),
+      errorElement: <ErrorPage />
+    },
+    {
       path: '/group-management',
       element: (
         <MainLayout>
@@ -51,15 +60,7 @@ const Router: React.FC = () => {
       ),
       errorElement: <ErrorPage />
     },
-    {
-      path: '/logout',
-      element: (
-        <MainLayout>
-          <LogOut />
-        </MainLayout>
-      ),
-      errorElement: <ErrorPage />
-    },
+
     {
       path: '/personal-event',
       element: (
@@ -84,7 +85,11 @@ const Router: React.FC = () => {
     },
     {
       path: '/logout',
-      element: <></>
+      element: (
+        <MainLayout>
+          <LogOut />
+        </MainLayout>
+      )
     },
     {
       path: '*',

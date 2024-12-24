@@ -9,17 +9,16 @@ import styles from './LandingPage.module.css'
 import { Button } from 'flowbite-react'
 import axios from 'axios'
 
-import dotenv from 'dotenv'
-dotenv.config()
-
 const SyncButton: React.FC = () => {
   // Get parameters from the URL
   const urlParams = new URLSearchParams(window.location.search)
   const code = urlParams.get('code')
   const error = urlParams.get('error')
-  const clientId = process.env.GOOGLE_CLIENT_ID
-  const redirectUri = process.env.GOOGLE_REDIRECT_URI
-  const clientSecret = process.env.GOOGLE_CLIENT_SECRET
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+  const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI
+  const clientSecret = import.meta.env.VITE_GOOGLE_CLIENT_SECRET
+
+  console.log(clientId, redirectUri, clientSecret)
 
   const handleClick = () => {
     console.log('Sync with Google Calendar')
@@ -30,12 +29,16 @@ const SyncButton: React.FC = () => {
     const accessType = 'offline'
     const prompt = 'consent'
 
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
-      redirectUri || 'http://localhost:3000'
-    )}&response_type=${responseType}&scope=${encodeURIComponent(scope)}&access_type=${accessType}&prompt=${prompt}`
+    const oauthUrl = `https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      redirectUri
+    )}&response_type=${responseType}&scope=${encodeURIComponent(
+      scope
+    )}&access_type=${accessType}&prompt=${prompt}&service=lso&o2v=2&ddm=1&flowName=GeneralOAuthFlow`
+
+    console.log(oauthUrl)
 
     // Redirect the user to the Google authorization URL
-    window.location.href = googleAuthUrl
+    window.location.href = oauthUrl
   }
 
   useEffect(() => {
@@ -50,7 +53,20 @@ const SyncButton: React.FC = () => {
           grant_type: 'authorization_code'
         })
         .then((response) => {
-          console.log('Google Calendar response:', response)
+          console.log('Google Calendar response:', response.data)
+          const refreshToken = response.data.refresh_token
+
+          axios
+            .post('http://localhost:5000/user/add-token', {
+              userId: '539ba65e-3327-4951-8494-675cc2af54fb',
+              refreshToken: refreshToken
+            })
+            .then((response) => {
+              console.log('Google Calendar response:', response.data)
+            })
+            .catch((error) => {
+              console.log('Server error:', error.message)
+            })
         })
         .catch((error) => {
           console.log('Google Calendar error:', error)
@@ -75,7 +91,6 @@ const Header: React.FC = () => {
         <span className='text-xl lg:text-2xl satoshi font-bold hidden sm:block'>BKBotScheduler</span>
       </div>
       <SigninButtonGG />
-
       <SyncButton />
     </div>
   )
