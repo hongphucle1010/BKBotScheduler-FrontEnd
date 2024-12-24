@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import logo from '../../assets/LandingPage/Logo.png'
 import studentImg from '../../assets/LandingPage/student.png'
 import SigninButtonGG from '../../components/LandingPage/signinGG.tsx'
@@ -6,6 +6,66 @@ import { useGoogleOneTapLogin } from '@react-oauth/google'
 import { useDispatch } from 'react-redux'
 import { logInWithGoogleOneTap } from '../../lib/helper/authentication.ts'
 import styles from './LandingPage.module.css'
+import { Button } from 'flowbite-react'
+import axios from 'axios'
+
+import dotenv from 'dotenv'
+dotenv.config()
+
+const SyncButton: React.FC = () => {
+  // Get parameters from the URL
+  const urlParams = new URLSearchParams(window.location.search)
+  const code = urlParams.get('code')
+  const error = urlParams.get('error')
+  const clientId = process.env.GOOGLE_CLIENT_ID
+  const redirectUri = process.env.GOOGLE_REDIRECT_URI
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET
+
+  const handleClick = () => {
+    console.log('Sync with Google Calendar')
+    // Construct the Google OAuth 2.0 URL
+
+    const responseType = 'code'
+    const scope = 'https://www.googleapis.com/auth/calendar'
+    const accessType = 'offline'
+    const prompt = 'consent'
+
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(
+      redirectUri || 'http://localhost:3000'
+    )}&response_type=${responseType}&scope=${encodeURIComponent(scope)}&access_type=${accessType}&prompt=${prompt}`
+
+    // Redirect the user to the Google authorization URL
+    window.location.href = googleAuthUrl
+  }
+
+  useEffect(() => {
+    if (code) {
+      console.log('Google Calendar code:', code)
+      axios
+        .post('https://oauth2.googleapis.com/token', {
+          code: code,
+          redirectUri: redirectUri,
+          clientId: clientId,
+          client_secret: clientSecret,
+          grant_type: 'authorization_code'
+        })
+        .then((response) => {
+          console.log('Google Calendar response:', response)
+        })
+        .catch((error) => {
+          console.log('Google Calendar error:', error)
+        })
+    }
+    if (error) {
+      console.log('Google Calendar error:', error)
+    }
+  }, [])
+  return (
+    <Button color='warning' className='hidden sm:block' onClick={handleClick}>
+      Đòng bộ với Google Calendar
+    </Button>
+  )
+}
 
 const Header: React.FC = () => {
   return (
@@ -15,6 +75,8 @@ const Header: React.FC = () => {
         <span className='text-xl lg:text-2xl satoshi font-bold hidden sm:block'>BKBotScheduler</span>
       </div>
       <SigninButtonGG />
+
+      <SyncButton />
     </div>
   )
 }
