@@ -143,7 +143,7 @@ const Sidebar: React.FC = () => {
       {isCollapsed && (
         <button
           onClick={toggleSidebar}
-          className='bg-slate-50 border-blue-400 drop-shadow-lg fixed top-4 left-4 z-50 p-2 rounded-md focus:outline-none md:hidden'
+          className='bg-slate-50 border-blue-400 drop-shadow-lg fixed top-2 left-2 z-50 p-2 rounded-md focus:outline-none md:hidden'
         >
           <HiMenu className='h-6 w-6' />
         </button>
@@ -162,13 +162,13 @@ const Sidebar: React.FC = () => {
             />
             <SidebarFlowbite.Items>
               <SidebarFlowbite.ItemGroup>
-                <button onClick={toggleDropdown} className='w-full h-20 flex items-center pl-3 gap-2.5'>
+                <button onClick={toggleDropdown} className='w-full h-20 flex items-center pl-3 gap-2.5 relative'>
                   <Avatar img={user.avatar} alt='User avatar' rounded />
                   <p className='text-lg text-blue-800'>{user.name}</p>
                   {isDropdownOpen && (
                     <div
                       ref={dropdownRef}
-                      className='absolute top-36 md:top-20 left-20 bg-white rounded-xl shadow-lg z-50 w-42'
+                      className='absolute -bottom-24 right-0 bg-white rounded-xl shadow-lg z-50 w-42'
                     >
                       <div className='p-2 pb-1'>
                         <a
