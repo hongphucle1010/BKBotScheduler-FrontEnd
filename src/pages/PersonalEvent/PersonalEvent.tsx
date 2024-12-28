@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { BsThreeDotsVertical } from 'react-icons/bs'
 
 type EventType = 'Task' | 'Meeting' | 'Event'
 type FilterType = EventType | 'All'
@@ -184,25 +185,57 @@ interface SidebarProps {
 const Sidebar = ({ setTypeFilter }: SidebarProps) => {
   const types: FilterType[] = ['All', 'Event', 'Meeting', 'Task']
   const [currentType, setCurrentType] = useState<FilterType>('All')
+  const sidebarRef = useRef<HTMLDivElement>(null) // Add ref for SidebarFlowbite
+  const [isCollapsed, setIsCollapsed] = useState(true) // Initially collapsed on mobile
+
+  const toggleSidebar = (): void => {
+    setIsCollapsed(!isCollapsed)
+  }
+
+  useEffect(() => {
+    const handleClickOutsideSidebar = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setIsCollapsed(true)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutsideSidebar)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutsideSidebar)
+    }
+  }, [sidebarRef])
 
   return (
-    <div className='h-full flex flex-col w-1/6 gap-2 bg-teal-300 px-5 py-5'>
-      <p className='text-xl font-bold'>Phân loại</p>
-      <hr className='my-2 border-black' /> {/* Added a horizontal line */}
-      {types.map((type) => (
-        <div
-          className={`w-full p-2 hover:bg-cyan-500 rounded-md cursor-pointer font-semibold ${
-            currentType === type ? 'bg-cyan-500' : ''
-          }`}
-          onClick={() => {
-            setTypeFilter(type)
-            setCurrentType(type)
-          }}
+    <>
+      {isCollapsed && (
+        <button
+          onClick={toggleSidebar}
+          className='bg-slate-50 border-blue-400 drop-shadow-lg fixed top-2 right-2 z-50 p-2 rounded-full focus:outline-none lg:hidden'
         >
-          {type}
-        </div>
-      ))}
-    </div>
+          <BsThreeDotsVertical className='h-6 w-6' />
+        </button>
+      )}
+      <div
+        className={`h-full flex flex-col w-2/5 md:w-1/6 gap-2 bg-teal-300 px-5 py-5 absolute right-0 lg:static transition-transform duration-300 ${isCollapsed ? 'translate-x-full lg:translate-x-0' : 'translate-x-0'}`}
+        ref={sidebarRef}
+      >
+        <p className='text-xl font-bold'>Phân loại</p>
+        <hr className='my-2 border-black' /> {/* Added a horizontal line */}
+        {types.map((type) => (
+          <div
+            className={`w-full p-2 hover:bg-cyan-500 rounded-md cursor-pointer font-semibold ${
+              currentType === type ? 'bg-cyan-500' : ''
+            }`}
+            onClick={() => {
+              setTypeFilter(type)
+              setCurrentType(type)
+            }}
+          >
+            {type}
+          </div>
+        ))}
+      </div>
+    </>
   )
 }
 
