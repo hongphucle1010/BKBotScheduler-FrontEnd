@@ -16,7 +16,7 @@ const ScrollToBottomButton = ({ scrollToBottom }: { scrollToBottom: () => void }
   )
 }
 
-const MessageBox = () => {
+export const MessageBox = () => {
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const [isAtBottom, setIsAtBottom] = useState<boolean>(true)
   const messageList = useSelector((state: RootState) => state.message.value)

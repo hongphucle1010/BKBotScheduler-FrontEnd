@@ -10,7 +10,9 @@ import LogOut from '../pages/TestingPage/LogOut'
 import Chatbot from '../pages/Chatbot/Chatbot'
 import GroupManagementPage from '../pages/GroupManagementPage/GroupManagementPage'
 import SettingPage from '../pages/SettingPage/SettingPage'
+import GroupDetailPage from '../pages/GroupDetailPage/GroupDetailPage'
 import PersonalEvent from '../pages/PersonalEvent/PersonalEvent'
+
 
 const Router: React.FC = () => {
   const role = useSelector((state: RootState) => state.user.value.role)
@@ -32,6 +34,14 @@ const Router: React.FC = () => {
         </MainLayout>
       ),
       errorElement: <ErrorPage />
+    },
+    {
+      path: '/group-management/:groupId',
+      element: (
+        <MainLayout>
+          <GroupDetailPage />
+        </MainLayout>
+      )
     },
     {
       path: '/chat',

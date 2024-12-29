@@ -51,7 +51,7 @@ const MessageTypingArea = React.memo(() => {
   }, [message])
 
   return (
-    <div className='my-0 h-16 flex items-center gap-2.5 p-2.5'>
+    <div className='my-0 h-16 flex w-full items-center gap-2.5 p-2.5'>
       <input
         ref={inputRef}
         type='text'
