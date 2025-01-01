@@ -1,27 +1,22 @@
 import { useSearchParams } from 'react-router-dom'
-import { useEffect } from 'react'
 import { Spinner } from 'flowbite-react'
+import { logInWithGoogle } from '../../lib/helper/authentication'
+import { useDispatch } from 'react-redux'
 
 const LogIn = () => {
   const [searchParams] = useSearchParams()
-
+  const dispatch = useDispatch()
   const code = searchParams.get('code')
-  const scope = searchParams.get('scope')
-  const authuser = searchParams.get('authuser')
-  const hd = searchParams.get('hd')
-  const prompt = searchParams.get('prompt')
+  //   const scope = searchParams.get('scope')
+  //   const authuser = searchParams.get('authuser')
+  //   const hd = searchParams.get('hd')
+  //   const prompt = searchParams.get('prompt')
 
-  useEffect(() => {
-    console.log({
-      code,
-      scope,
-      authuser,
-      hd,
-      prompt
+  if (code) {
+    logInWithGoogle(code, dispatch).then((response) => {
+      console.log(response)
     })
-
-    console.log(searchParams)
-  }, [code, scope, authuser, hd, prompt, searchParams])
+  }
 
   return (
     <div className='flex flex-col items-center justify-center h-screen'>

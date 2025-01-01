@@ -6,13 +6,14 @@ import { RootState } from '../lib/redux/store'
 import ErrorPage from '../pages/ErrorPage/ErrorPage'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import LandingPage from '../pages/LandingPage/LandingPage'
-import LogOut from '../pages/TestingPage/LogOut'
+import LogOut from '../pages/Authentication/LogOut'
 import Chatbot from '../pages/Chatbot/Chatbot'
 import GroupManagementPage from '../pages/GroupManagementPage/GroupManagementPage'
 import SettingPage from '../pages/SettingPage/SettingPage'
 import GroupDetailPage from '../pages/GroupDetailPage/GroupDetailPage'
 import PersonalEvent from '../pages/PersonalEvent/PersonalEvent'
 import LogIn from '../pages/Authentication/LogIn'
+import LogInRedirect from '../pages/Authentication/LogInRedirect'
 
 const Router: React.FC = () => {
   const role = useSelector((state: RootState) => state.user.value.role)
@@ -54,7 +55,7 @@ const Router: React.FC = () => {
     },
     {
       path: '/login',
-      element: <></>,
+      element: <LogInRedirect />,
       errorElement: <ErrorPage />
     },
     {
