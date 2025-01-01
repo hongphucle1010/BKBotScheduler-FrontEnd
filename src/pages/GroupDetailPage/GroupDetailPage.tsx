@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs'
-import { TaskList } from '../../components/Group/TaskList'
+import EventList from '../../components/Group/EventList'
 import MemberList from '../../components/Group/MemberList'
 import EventSchedule from '../../components/Group/EventSchedule'
 import ChatBubble from '../../components/Group/ChatBubble'
@@ -13,17 +13,23 @@ const GroupDetailPage = () => {
   const [activeTab, setActiveTab] = useState('tasks')
 
   return (
-    <div className='container mx-auto p-4'>
+    <div className='container mx-auto p-4 w-full'>
       <h1 className='text-2xl font-bold mb-4'>Group Management</h1>
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value='tasks'>Tasks</TabsTrigger>
-          <TabsTrigger value='members'>Members</TabsTrigger>
-          <TabsTrigger value='events'>Events</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
+        <TabsList className='w-full flex justify-between items-center'>
+          <TabsTrigger className='w-full flex justify-center items-center' value='tasks'>
+            Tasks
+          </TabsTrigger>
+          <TabsTrigger className='w-full flex justify-center items-center' value='members'>
+            Members
+          </TabsTrigger>
+          <TabsTrigger className='w-full flex justify-center items-center' value='events'>
+            Events
+          </TabsTrigger>
         </TabsList>
         <TabsContent value='tasks'>
           <TaskProvider>
-            <TaskList />
+            <EventList />
           </TaskProvider>
         </TabsContent>
         <TabsContent value='members'>

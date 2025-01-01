@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { Avatar } from 'flowbite-react'
 import { Input } from '../../components/ui/input'
 import { Link } from 'react-router-dom'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../../components/ui/card'
+import { Card } from '../../components/ui/card'
 import {
   Pagination,
   PaginationContent,
@@ -18,8 +18,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogFooter
+  DialogTrigger
 } from '../../components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form'
 import { GroupElementProps } from '../../lib/types/entity'
