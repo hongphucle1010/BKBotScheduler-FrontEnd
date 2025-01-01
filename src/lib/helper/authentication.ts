@@ -1,7 +1,6 @@
 import { Dispatch } from '@reduxjs/toolkit'
 import { logInWithGoogleApi, logInWithGoogleOneTapApi } from '../../api/authentication/authentication'
 import { logInReducer, logOutReducer } from '../redux/reducers/userState'
-import { GoogleLoginCodeResponse } from '../../api/authentication/types'
 import { CredentialResponse } from '@react-oauth/google'
 import { clearMessages } from '../redux/reducers/message'
 
@@ -34,8 +33,9 @@ export function clearAllTokens() {
   clearRefreshToken()
 }
 
-export async function logInWithGoogle(codeResponse: GoogleLoginCodeResponse, dispatch: Dispatch) {
-  logInWithGoogleApi(codeResponse.access_token).then((userInfo) => {
+export async function logInWithGoogle(code: string, dispatch: Dispatch) {
+  logInWithGoogleApi(code).then((userInfo) => {
+    console.log(userInfo)
     dispatch(
       logInReducer({
         id: userInfo.id,
@@ -50,6 +50,9 @@ export async function logInWithGoogle(codeResponse: GoogleLoginCodeResponse, dis
   })
 }
 
+/**
+ * @deprecated
+ */
 export async function logInWithGoogleOneTap(credentialResponse: CredentialResponse, dispatch: Dispatch) {
   logInWithGoogleOneTapApi(credentialResponse).then((userInfo) => {
     if (!userInfo) return
