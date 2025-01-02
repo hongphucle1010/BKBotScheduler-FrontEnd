@@ -92,51 +92,7 @@ const Sidebar: React.FC = () => {
     }
   }, [sidebarRef])
 
-  interface Group {
-    name: string
-    description: string
-    members: number
-    leader: string
-    skills: string[]
-    projects: { name: string; status: string }[]
-    avatar: string
-  }
-
-  const groups: Group[] = [
-    {
-      name: 'CNPM - TN01',
-      description: 'Phát triển ứng dụng di động',
-      members: 10,
-      leader: 'PHÚC LÊ HỒNG',
-      skills: ['Java', 'Kotlin', 'React Native'],
-      projects: [
-        { name: 'Ứng dụng đặt hàng', status: 'Hoàn thành' },
-        { name: 'Ứng dụng học tập trực tuyến', status: 'Đang tiến hành' }
-      ],
-      avatar: ''
-    },
-    {
-      name: 'WebDev - 01',
-      description: 'Phát triển web front-end',
-      members: 8,
-      leader: 'Liêm Đỗ Thanh',
-      skills: ['HTML', 'CSS', 'JavaScript', 'React'],
-      projects: [
-        { name: 'Website thương mại điện tử', status: 'Đang lên kế hoạch' },
-        { name: 'Landing page giới thiệu sản phẩm', status: 'Hoàn thành' }
-      ],
-      avatar: ''
-    },
-    {
-      name: 'AI - 01',
-      description: 'Nghiên cứu và ứng dụng trí tuệ nhân tạo',
-      members: 5,
-      leader: 'Lê Văn C',
-      skills: ['Python', 'Machine Learning', 'Deep Learning'],
-      projects: [{ name: 'Hệ thống nhận diện khuôn mặt', status: 'Đang tiến hành' }],
-      avatar: ''
-    }
-  ]
+  const groups = useSelector((state: RootState) => state.group.groups)
 
   return (
     <div className='relative'>
@@ -210,7 +166,7 @@ const Sidebar: React.FC = () => {
                 </div>
                 <div className='w-full h-40 overflow-y-auto beautiful-scrollbar'>
                   {groups.map((group) => (
-                    <SidebarFlowbite.Item href='#' onClick={handleRedirect} key={group.name}>
+                    <SidebarFlowbite.Item href='#' onClick={handleRedirect} key={group.id}>
                       <div className='flex gap-3 items-center'>
                         <Avatar img={group.avatar} alt='Group avatar' size='sm' />
                         <p>{group.name}</p>

@@ -10,7 +10,7 @@ const LogInRedirect = () => {
   })
 
   return (
-    <div>
+    <div className='flex flex-col items-center justify-center h-screen'>
       <h1>Đang chuyển hướng...</h1>
       <div>
         <p>Nếu trang không tự điều hướng, bấm vào đây</p>
