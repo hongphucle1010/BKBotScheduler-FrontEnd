@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../lib/redux/store'
 import { Link, useNavigate } from 'react-router-dom'
 import { TbLayoutSidebarLeftCollapseFilled } from 'react-icons/tb'
+import { getImageFromIndexedDB } from '../../lib/helper/indexeddb'
 
 const customThemeSidebar: CustomFlowbiteTheme = {
   sidebar: {
@@ -55,6 +56,7 @@ const Sidebar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false) // State for dropdown visibility
   const dropdownRef = useRef<HTMLDivElement>(null) // Ref for the dropdown
   const sidebarRef = useRef<HTMLDivElement>(null) // Add ref for SidebarFlowbite
+  const [avatarUrl, setAvatarUrl] = useState('') // State for avatar URL
 
   const toggleSidebar = (): void => {
     setIsCollapsed(!isCollapsed)
@@ -92,6 +94,14 @@ const Sidebar: React.FC = () => {
     }
   }, [sidebarRef])
 
+  useEffect(() => {
+    getImageFromIndexedDB()
+      .then((url) => {
+        setAvatarUrl(url)
+      })
+      .catch(() => setAvatarUrl(user.avatar))
+  }, [])
+
   const groups = useSelector((state: RootState) => state.group.groups)
 
   return (
@@ -119,7 +129,7 @@ const Sidebar: React.FC = () => {
             <SidebarFlowbite.Items>
               <SidebarFlowbite.ItemGroup>
                 <button onClick={toggleDropdown} className='w-full h-20 flex items-center pl-3 gap-2.5 relative'>
-                  <Avatar img={user.avatar} alt='User avatar' rounded />
+                  <Avatar img={avatarUrl} alt='User avatar' rounded />
                   <p className='text-lg text-blue-800'>{user.name}</p>
                   {isDropdownOpen && (
                     <div

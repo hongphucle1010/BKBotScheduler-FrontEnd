@@ -1,0 +1,3 @@
+interface GetMyGroupsResponse {
+  groups: Group[]
+}
