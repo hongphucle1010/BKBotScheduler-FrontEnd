@@ -1,3 +1,6 @@
+/**
+ * @deprecated
+ */
 export interface GroupElementProps {
   groupId: string
   name: string

@@ -5,6 +5,9 @@ import { LogInWithGoogleOneTapRequest, LogInWithGoogleResponse, UserInfoResponse
 // import { jwtDecode } from 'jwt-decode'
 import { apiClient } from '..'
 
+/**
+ * @deprecated
+ */
 export async function logInWithGoogleOneTapApi(credentialResponse: CredentialResponse) {
   try {
     const credential: LogInWithGoogleOneTapRequest = {
@@ -39,9 +42,9 @@ export async function logInWithGoogleOneTapApi(credentialResponse: CredentialRes
   }
 }
 
-export async function logInWithGoogleApi(access_token: string) {
+export async function logInWithGoogleApi(code: string) {
   try {
-    const response = await apiClient.get<LogInWithGoogleResponse>('/auth/google?code=' + access_token)
+    const response = await apiClient.get<LogInWithGoogleResponse>('/auth/google?code=' + code)
     // const response: LogInWithGoogleResponse = await fetchUserInfo(access_token)
     return response.data
   } catch (error) {
@@ -53,6 +56,9 @@ export async function logInWithGoogleApi(access_token: string) {
   }
 }
 
+/**
+ * @deprecated
+ */
 export async function fetchUserInfo(access_token: string) {
   try {
     const response = await axios.get<UserInfoResponse>('https://www.googleapis.com/oauth2/v1/userinfo', {
