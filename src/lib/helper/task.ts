@@ -1,6 +1,6 @@
-import { Task, Subtask } from '../types/entity'
+/* import { Event } from '../types/entity'
 
-export const calculateProgress = (task: Task): number => {
+export const calculateProgress = (task: Event): number => {
   if (task.subtasks.length === 0) return 0
   const completedSubtasks = task.subtasks.filter((subtask) => subtask.completed).length
   return Math.round((completedSubtasks / task.subtasks.length) * 100)
@@ -11,7 +11,7 @@ export const isOverdue = (date?: Date): boolean => {
   return new Date(date) < new Date()
 }
 
-export const sortTasks = (tasks: Task[], sortBy: 'priority' | 'progress' | 'overdue'): Task[] => {
+export const sortTasks = (tasks: Event[], sortBy: 'priority' | 'progress' | 'overdue'): Event[] => {
   return [...tasks].sort((a, b) => {
     switch (sortBy) {
       case 'priority':
@@ -36,3 +36,4 @@ const priorityToNumber = (priority: 'low' | 'medium' | 'high'): number => {
       return 3
   }
 }
+ */

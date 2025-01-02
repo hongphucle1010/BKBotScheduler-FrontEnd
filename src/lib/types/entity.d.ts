@@ -9,24 +9,16 @@ export interface GroupElementProps {
   avatar: string
 }
 
-export interface Subtask {
-  id: number
-  name: string
+export interface Event {
+  summary: string
   description: string
-  completed: boolean
-  deadline?: Date
-  priority: 'low' | 'medium' | 'high'
-  assignedMembers: Member[]
-}
-
-export interface Task {
-  id: number
-  name: string
-  description: string
-  subtasks: Subtask[]
-  deadline?: Date
-  priority: 'low' | 'medium' | 'high'
-  assignedMembers: Member[]
+  startTime: string
+  endTime: string
+  isRecurring: boolean
+  isComplete: boolean
+  type: string
+  priority: number
+  eventId: string
 }
 
 export interface Member {

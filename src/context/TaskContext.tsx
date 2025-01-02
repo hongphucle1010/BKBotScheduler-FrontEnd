@@ -1,10 +1,10 @@
 'use client'
 import React, { createContext, useContext, useState, ReactNode } from 'react'
-import { Task, Member } from '../lib/types/entity'
+import { Event, Member } from '../lib/types/entity'
 
 interface TaskContextType {
-  tasks: Task[]
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+  tasks: Event[]
+  setTasks: React.Dispatch<React.SetStateAction<Event[]>>
   members: Member[]
   setMembers: React.Dispatch<React.SetStateAction<Member[]>>
 }
@@ -12,7 +12,7 @@ interface TaskContextType {
 const TaskContext = createContext<TaskContextType | undefined>(undefined)
 
 export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, setTasks] = useState<Event[]>([])
   const [members, setMembers] = useState<Member[]>([
     { id: 1, name: 'Alice' },
     { id: 2, name: 'Bob' },
