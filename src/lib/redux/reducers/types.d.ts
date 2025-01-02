@@ -13,3 +13,12 @@ export interface Message {
 }
 
 export type MessagePair = [Message, Message]
+
+export interface Group {
+  description: string | null
+  name: string
+  createTime: Date
+  numMember: number | null
+  id: string
+  avatar?: string
+}
