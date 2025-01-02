@@ -13,6 +13,7 @@ const groupSlice = createSlice({
   reducers: {
     setGroups: (state, action: PayloadAction<Group[]>) => {
       state.groups = action.payload
+      console.log('Set groups:', action.payload)
     },
     clearGroup: (state) => {
       state.groups = []

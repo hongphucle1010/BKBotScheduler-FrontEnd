@@ -174,12 +174,12 @@ const Sidebar: React.FC = () => {
                     <IoAddCircleOutline className='w-5 h-5' />
                   </button>
                 </div>
-                <div className='w-full h-40 overflow-y-auto beautiful-scrollbar'>
+                <div className='w-full h-40 overflow-y-auto overflow-x-hidden beautiful-scrollbar'>
                   {groups.map((group) => (
                     <SidebarFlowbite.Item href='#' onClick={handleRedirect} key={group.id}>
                       <div className='flex gap-3 items-center'>
                         <Avatar img={group.avatar} alt='Group avatar' size='sm' />
-                        <p>{group.name}</p>
+                        <p className='w-20'>{group.name}</p>
                       </div>
                     </SidebarFlowbite.Item>
                   ))}
