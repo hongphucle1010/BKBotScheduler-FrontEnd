@@ -38,7 +38,7 @@ apiClient.interceptors.response.use(
       const refreshToken = getRefreshToken() // use helper function to get refresh token
       if (refreshToken) {
         try {
-          const response = await axios.post<RefreshTokenResponse>(`${apiHost}/refreshToken`, {
+          const response = await axios.post<RefreshTokenResponse>(`${apiHost}/auth/refreshToken`, {
             refreshToken
           } as RefreshTokenRequest)
           // don't use axios instance that already configured for refresh token api call
@@ -50,9 +50,12 @@ apiClient.interceptors.response.use(
           // Handle token refresh failure
           // mostly logout the user and re-authenticate by login again
           console.error('Token refresh failed', error)
+          throw Error(REFRESH_TOKEN_EXPIRED)
         }
       }
     }
     return Promise.reject(error)
   }
 )
+
+export const REFRESH_TOKEN_EXPIRED = 'REFRESH_TOKEN_EXPIRED'

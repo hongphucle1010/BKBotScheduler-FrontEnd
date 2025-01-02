@@ -73,3 +73,16 @@ export async function fetchUserInfo(access_token: string) {
     throw error
   }
 }
+
+
+export async function checkAuthentication() {
+  try {
+    await apiClient.get('/auth/pong')
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error('Axios error: ', error)
+      throw new Error(error.response?.data)
+    } else console.error(error)
+    throw new Error('Check authentication failed')
+  }
+}
