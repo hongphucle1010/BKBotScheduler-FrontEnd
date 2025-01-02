@@ -4,13 +4,19 @@ export async function saveImageToIndexedDB(url: string) {
   const response = await fetch(url)
   const blob = await response.blob()
 
+  // Open the database and ensure the object store exists
   const db = await openDB('image-store', 1, {
     upgrade(db) {
-      db.createObjectStore('images')
+      // Check if the object store already exists to avoid re-creation
+      if (!db.objectStoreNames.contains('images')) {
+        db.createObjectStore('images') // Create object store for the images
+      }
     }
   })
 
+  // Save the image blob into the 'images' object store
   await db.put('images', blob, 'my-image')
+  console.log('Image saved to IndexedDB!')
 }
 
 export async function getImageFromIndexedDB() {
