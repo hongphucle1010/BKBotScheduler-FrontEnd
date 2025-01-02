@@ -13,9 +13,12 @@ const groupSlice = createSlice({
   reducers: {
     setGroups: (state, action: PayloadAction<Group[]>) => {
       state.groups = action.payload
+    },
+    clearGroup: (state) => {
+      state.groups = []
     }
   }
 })
 
-export const { setGroups } = groupSlice.actions
+export const { setGroups, clearGroup } = groupSlice.actions
 export default groupSlice.reducer

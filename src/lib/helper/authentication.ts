@@ -3,6 +3,9 @@ import { logInWithGoogleApi, logInWithGoogleOneTapApi } from '../../api/authenti
 import { logInReducer, logOutReducer } from '../redux/reducers/userState'
 import { CredentialResponse } from '@react-oauth/google'
 import { clearMessages } from '../redux/reducers/message'
+import { saveImageToIndexedDB, getImageFromIndexedDB, deleteImageFromIndexedDB } from './indexeddb'
+import { clearGroup, setGroups } from '../redux/reducers/group'
+import { getMyGroupsApi } from '../../api/group/group'
 
 export function setAccessToken(token: string) {
   localStorage.setItem('accessToken', token)
@@ -34,8 +37,8 @@ export function clearAllTokens() {
 }
 
 export async function logInWithGoogle(code: string, dispatch: Dispatch) {
-  logInWithGoogleApi(code).then((userInfo) => {
-    console.log(userInfo)
+  logInWithGoogleApi(code).then(async (userInfo) => {
+    await saveImageToIndexedDB(userInfo.picture)
     dispatch(
       logInReducer({
         id: userInfo.id,
@@ -47,6 +50,9 @@ export async function logInWithGoogle(code: string, dispatch: Dispatch) {
     )
     setAccessToken(userInfo.access_token)
     setRefreshToken(userInfo.refresh_token)
+    getMyGroupsApi().then((groups) => {
+      dispatch(setGroups(groups.groups))
+    })
   })
 }
 
@@ -54,15 +60,17 @@ export async function logInWithGoogle(code: string, dispatch: Dispatch) {
  * @deprecated
  */
 export async function logInWithGoogleOneTap(credentialResponse: CredentialResponse, dispatch: Dispatch) {
-  logInWithGoogleOneTapApi(credentialResponse).then((userInfo) => {
+  logInWithGoogleOneTapApi(credentialResponse).then(async (userInfo) => {
     if (!userInfo) return
+    await saveImageToIndexedDB(userInfo.picture)
+    const imageUrl = await getImageFromIndexedDB()
     dispatch(
       logInReducer({
         id: userInfo.id,
         name: userInfo.name,
         role: 'STUDENT',
         email: userInfo.email,
-        avatar: userInfo.picture
+        avatar: imageUrl
       })
     )
     setAccessToken(userInfo.access_token)
@@ -73,4 +81,6 @@ export async function logInWithGoogleOneTap(credentialResponse: CredentialRespon
 export function logOut(dispatch: Dispatch) {
   dispatch(logOutReducer())
   dispatch(clearMessages())
+  dispatch(clearGroup())
+  deleteImageFromIndexedDB()
 }
