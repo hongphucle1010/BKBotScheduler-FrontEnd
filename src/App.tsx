@@ -14,8 +14,7 @@ function App() {
 
   useEffect(() => {
     try {
-      console.log(user)
-      if (user.email) {
+      if (user.role === 'STUDENT') {
         getMyGroupsApi().then((groups) => {
           dispatch(setGroups(groups.groups))
         })
