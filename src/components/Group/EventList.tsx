@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card'
 import { Checkbox } from '../ui/checkbox'
-import { createEvent, deleteEvent, updateEvent } from '../../api/event/event'
+import { createEventGroup, deleteEventGroup, updateEventGroup } from '../../api/event/event'
 import { useGroupContext } from '../../context/GroupContext'
 
 export default function EventList() {
@@ -20,14 +20,14 @@ export default function EventList() {
   const [filterComplete, setFilterComplete] = useState<'all' | 'complete' | 'incomplete'>('all')
 
   const handleCreateEvent = async (data: EventFormData) => {
-    await createEvent({ ...data, group_id: groupId }).then((res) => {
+    await createEventGroup({ ...data, group_id: groupId }).then((res) => {
       setEvents([...events, res])
     })
   }
 
   const handleEditEvent = async (data: EventFormData) => {
     const { startTime, endTime, ...rest } = data
-    await updateEvent(data.eventId!, {
+    await updateEventGroup(data.eventId!, {
       ...rest,
       startTime: new Date(startTime).toISOString(),
       endTime: new Date(endTime).toISOString()
@@ -38,7 +38,7 @@ export default function EventList() {
   }
 
   const handleDeleteEvent = async (eventId: string) => {
-    await deleteEvent(eventId).then(() => setEvents(events.filter((event) => event.eventId !== eventId)))
+    await deleteEventGroup(eventId).then(() => setEvents(events.filter((event) => event.eventId !== eventId)))
   }
 
   const handleFastChangeComplete = async (eventId: string) => {
@@ -46,7 +46,7 @@ export default function EventList() {
 
     if (!event) return
 
-    await updateEvent(eventId, { isComplete: !event.isComplete }).then(() => {
+    await updateEventGroup(eventId, { isComplete: !event.isComplete }).then(() => {
       setEvents(
         events.map((event) => (event.eventId === eventId ? { ...event, isComplete: !event.isComplete } : event))
       )
@@ -58,7 +58,7 @@ export default function EventList() {
 
     if (!event) return
 
-    await updateEvent(eventId, { priority: newPriority }).then(() => {
+    await updateEventGroup(eventId, { priority: newPriority }).then(() => {
       setEvents(events.map((event) => (event.eventId === eventId ? { ...event, priority: newPriority } : event)))
     })
   }
