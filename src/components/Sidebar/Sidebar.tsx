@@ -176,7 +176,11 @@ const Sidebar: React.FC = () => {
                 </div>
                 <div className='w-full h-40 overflow-y-auto overflow-x-hidden beautiful-scrollbar'>
                   {groups.map((group) => (
-                    <SidebarFlowbite.Item href='#' onClick={handleRedirect} key={group.id}>
+                    <SidebarFlowbite.Item
+                      href={`/group-management/${group.id}`}
+                      onClick={handleRedirect}
+                      key={group.id}
+                    >
                       <div className='flex gap-3 items-center'>
                         <Avatar img={group.avatar} alt='Group avatar' size='sm' />
                         <p className='w-20'>{group.name}</p>

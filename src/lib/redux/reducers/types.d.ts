@@ -15,10 +15,10 @@ export interface Message {
 export type MessagePair = [Message, Message]
 
 export interface Group {
-  description: string | null
+  description: string
   name: string
   createTime: Date
-  numMember: number | null
+  numMember: number
   id: string
   avatar?: string
 }

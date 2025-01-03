@@ -6,15 +6,14 @@ import { EventForm } from './EventForm'
 import { EventFormData } from '../../lib/validation'
 
 interface CreateEventDialogProps {
-  onCreateEvent: (data: EventFormData) => void
+  onCreateEvent: (data: EventFormData) => Promise<void>
 }
 
 export function CreateEventDialog({ onCreateEvent }: CreateEventDialogProps) {
   const [open, setOpen] = useState(false)
 
-  const handleCreateEvent = (data: EventFormData) => {
-    onCreateEvent(data)
-    setOpen(false)
+  const handleCreateEvent = async (data: EventFormData) => {
+    await onCreateEvent(data).then(() => setOpen(false))
   }
 
   return (
