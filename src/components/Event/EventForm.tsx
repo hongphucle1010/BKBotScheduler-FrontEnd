@@ -10,7 +10,7 @@ import { Label } from '../ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { InputDateTime } from './InputDateTime'
-
+import { EVENT_TYPES } from '../../lib/helper/constant'
 interface EventFormProps {
   onSubmit: (data: EventFormData) => void
   initialData?: Event
@@ -113,9 +113,20 @@ export function EventForm({ onSubmit, initialData }: EventFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Type</FormLabel>
-              <FormControl>
-                <Input {...field} value='task' readOnly />
-              </FormControl>
+              <Select onValueChange={(value) => field.onChange(value)} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Select type' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {EVENT_TYPES.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </FormItem>
           )}
         />
