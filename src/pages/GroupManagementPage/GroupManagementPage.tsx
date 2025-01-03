@@ -23,11 +23,13 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form'
 import { GroupElementProps } from '../../lib/types/entity'
 import { Button } from '../../components/ui/button'
-import { createGroup } from '../../lib/helper/group'
+import { createGroup } from '../../api/group/group'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { groupCreateSchema } from '../../lib/validation'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../lib/redux/store'
 
 const GroupElement = ({ groupId, name, description, numberOfMembers, avatar }: GroupElementProps) => {
   return (
@@ -46,28 +48,12 @@ const GroupElement = ({ groupId, name, description, numberOfMembers, avatar }: G
   )
 }
 
-const fakeGroups: GroupElementProps[] = [
-  {
-    groupId: '1',
-    name: 'Group Alpha',
-    description: 'This is the Alpha group.',
-    numberOfMembers: 10,
-    avatar: 'https://via.placeholder.com/150'
-  },
-  {
-    groupId: '2',
-    name: 'Group Beta',
-    description: 'This is the Beta group.',
-    numberOfMembers: 8,
-    avatar: 'https://via.placeholder.com/150'
-  }
-]
-
 const GROUP_PER_PAGE = 8
 
 const GroupManagementPage = () => {
+  const group = useSelector((state: RootState) => state.group.groups)
+  const [groups, setGroups] = useState(group)
   const [isOpen, setIsOpen] = useState(false)
-  const [groups, setGroups] = useState<GroupElementProps[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -78,9 +64,6 @@ const GroupManagementPage = () => {
   const currentGroups = filteredGroups.slice(indexOfFirstGroup, indexOfLastGroup)
 
   const totalPages = Math.ceil(filteredGroups.length / GROUP_PER_PAGE)
-  useEffect(() => {
-    setGroups(fakeGroups)
-  }, [])
 
   const form = useForm<z.infer<typeof groupCreateSchema>>({
     resolver: zodResolver(groupCreateSchema),
@@ -94,10 +77,13 @@ const GroupManagementPage = () => {
   const onSubmit = async (data: z.infer<typeof groupCreateSchema>) => {
     try {
       // upload image to cdn to get url => create group
-      await createGroup(data).then((res) => {
-        setIsOpen(false)
-        setGroups((prev) => [...prev, res])
-      })
+      await createGroup(data)
+        .then((res) => {
+          setGroups((prev) => [...prev, res])
+        })
+        .finally(() => {
+          setIsOpen(false)
+        })
     } catch (error) {
       console.error(error)
     }
@@ -191,11 +177,11 @@ const GroupManagementPage = () => {
         {currentGroups.map((group, index) => (
           <GroupElement
             key={index}
-            groupId={group.groupId}
+            groupId={group.id}
             name={group.name}
             description={group.description}
-            numberOfMembers={group.numberOfMembers}
-            avatar={group.avatar}
+            numberOfMembers={group.numMember}
+            /* avatar={group.avatar} */
           />
         ))}
       </div>

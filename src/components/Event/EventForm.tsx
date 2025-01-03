@@ -23,7 +23,7 @@ export function EventForm({ onSubmit, initialData }: EventFormProps) {
       type: 'task',
       isRecurring: false,
       isComplete: false,
-      priority: 3
+      priority: 1
     }
   })
 
@@ -63,11 +63,21 @@ export function EventForm({ onSubmit, initialData }: EventFormProps) {
         <div className='flex flex-col w-full space-y-4'>
           <div className='flex w-full justity-between items-center'>
             <Label>Start Time</Label>
-            <InputDateTime control={form.control} name='startTime' form={form} />
+            <InputDateTime
+              init={initialData?.startTime ? initialData.startTime : ''}
+              control={form.control}
+              name='startTime'
+              form={form}
+            />
           </div>
           <div className='flex w-full justity-between items-center'>
             <Label>End Time</Label>
-            <InputDateTime control={form.control} name='endTime' form={form} />
+            <InputDateTime
+              init={initialData?.endTime ? initialData.endTime : ''}
+              control={form.control}
+              name='endTime'
+              form={form}
+            />
           </div>
         </div>
 

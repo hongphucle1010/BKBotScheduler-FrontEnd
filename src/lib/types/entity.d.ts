@@ -1,12 +1,9 @@
-/**
- * @deprecated
- */
 export interface GroupElementProps {
   groupId: string
   name: string
   description: string
   numberOfMembers: number
-  avatar: string
+  avatar?: string
 }
 
 export interface Event {
@@ -22,6 +19,7 @@ export interface Event {
 }
 
 export interface Member {
-  id: number
+  id: string
   name: string
+  email: string
 }
