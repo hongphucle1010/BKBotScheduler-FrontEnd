@@ -3,5 +3,6 @@ export interface RefreshTokenRequest {
 }
 
 export interface RefreshTokenResponse {
-  accessToken: string
+  msg: string
+  access_token: string
 }
