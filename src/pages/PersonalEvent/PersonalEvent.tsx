@@ -1,189 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
+import { CreateEventDialog } from '../../components/Event/CreateEventDialog'
+import { createEventUser, getAllEventsUser } from '../../api/event/event'
+import { EventFormData } from '../../lib/validation'
+import { ReturnEvent } from '../../api/event/types'
+import { EVENT_TYPES } from '../../lib/helper/constant'
+import { Badge } from '../../components/ui/badge'
+import { Button } from '../../components/ui/button'
+import { useNavigate } from 'react-router-dom'
 
-type EventType = 'Task' | 'Meeting' | 'Event'
+type EventType =
+  | 'TASK'
+  | 'MEETING'
+  | 'EVENT'
+  | 'FOCUS_TIME'
+  | 'OUT_OF_OFFICE'
+  | 'WORKING_LOCATION'
+  | 'APPOINTMENT_SCHEDULE'
 type FilterType = EventType | 'All'
-
-interface Event {
-  id: string // Unique identifier
-  title: string
-  description?: string // Optional description
-  type: EventType
-  startTime: Date
-  endTime: Date
-  location?: string // Optional location
-  attendees?: string[] // Optional array of attendees
-}
-
-const eventList: Event[] = [
-  {
-    id: '1',
-    title: 'Grocery Shopping',
-    type: 'Task',
-    startTime: new Date('2024-07-27T10:00:00'),
-    endTime: new Date('2024-07-27T11:00:00')
-  },
-  {
-    id: '2',
-    title: 'Team Meeting',
-    type: 'Meeting',
-    startTime: new Date('2024-07-27T14:00:00'),
-    endTime: new Date('2024-07-27T15:00:00'),
-    location: 'Conference Room A',
-    attendees: ['John Doe', 'Jane Smith']
-  },
-  {
-    id: '3',
-    title: 'Birthday Party',
-    type: 'Event',
-    startTime: new Date('2024-07-28T18:00:00'),
-    endTime: new Date('2024-07-28T22:00:00'),
-    location: "Mike's House"
-  },
-  {
-    id: '4',
-    title: 'Pay Bills',
-    type: 'Task',
-    startTime: new Date(),
-    endTime: new Date(Date.now() + 3600000), // 1 hour from now
-    description: 'Pay all outstanding utility and credit card bills.'
-  },
-  // Additional Events
-  {
-    id: '5',
-    title: 'Gym Workout',
-    type: 'Task',
-    startTime: new Date('2024-12-24T07:00:00'),
-    endTime: new Date('2024-12-24T08:00:00')
-  },
-  {
-    id: '6',
-    title: 'Client Call - Project X',
-    type: 'Meeting',
-    startTime: new Date('2024-12-26T10:00:00'),
-    endTime: new Date('2024-12-26T11:00:00'),
-    attendees: ['Sarah Lee', 'David Johnson']
-  },
-  {
-    id: '7',
-    title: 'Movie Night (Star Wars!)',
-    type: 'Event',
-    startTime: new Date('2024-12-27T19:00:00'),
-    endTime: new Date('2024-12-28T01:00:00'),
-    location: 'Home Theater'
-  },
-  {
-    id: '8',
-    title: 'Finish Project Report',
-    type: 'Task',
-    startTime: new Date('2024-12-28T09:00:00'),
-    endTime: new Date('2024-12-28T12:00:00'),
-    description: 'Finalize report for the marketing team.'
-  },
-  {
-    id: '9',
-    title: 'Book Club Meeting',
-    type: 'Meeting',
-    startTime: new Date('2024-12-29T18:00:00'),
-    endTime: new Date('2024-12-29T20:00:00'),
-    location: 'Coffee Shop',
-    attendees: ['Emily Jones', 'Michael Chen']
-  },
-  {
-    id: '10',
-    title: 'Holiday Shopping',
-    type: 'Task',
-    startTime: new Date('2024-12-30T10:00:00'),
-    endTime: new Date('2024-12-30T14:00:00'),
-    description: 'Gifts for family and friends!'
-  },
-  {
-    id: '11',
-    title: 'New Year Eve Party',
-    type: 'Event',
-    startTime: new Date('2024-12-31T21:00:00'),
-    endTime: new Date('2025-01-01T02:00:00'),
-    location: 'Grand Ballroom'
-  },
-  {
-    id: '12',
-    title: 'Plan Next Quarter Goals',
-    type: 'Meeting',
-    startTime: new Date('2025-01-02T10:00:00'),
-    endTime: new Date('2025-01-02T12:00:00'),
-    attendees: ['Team Leaders']
-  },
-  {
-    id: '13',
-    title: 'Return Library Books',
-    type: 'Task',
-    startTime: new Date('2025-01-03T14:00:00'),
-    endTime: new Date('2025-01-03T15:00:00')
-  },
-  {
-    id: '14',
-    title: 'Doctor Appointment',
-    type: 'Event',
-    startTime: new Date('2025-01-06T09:00:00'),
-    endTime: new Date('2025-01-06T10:00:00'),
-    location: 'City Hospital'
-  },
-  {
-    id: '15',
-    title: 'Prepare Presentation',
-    type: 'Task',
-    startTime: new Date('2025-01-07T13:00:00'),
-    endTime: new Date('2025-01-07T17:00:00'),
-    description: 'Create slides and rehearse presentation for the conference.'
-  },
-  {
-    id: '16',
-    title: 'Project Kick-off Meeting',
-    type: 'Meeting',
-    startTime: new Date('2025-01-08T11:00:00'),
-    endTime: new Date('2025-01-08T12:00:00'),
-    location: 'Online Meeting Room',
-    attendees: ['Project Team']
-  },
-  {
-    id: '17',
-    title: 'Weekend Getaway',
-    type: 'Event',
-    startTime: new Date('2025-01-10T18:00:00'),
-    endTime: new Date('2025-01-12T16:00:00'),
-    location: 'Mountain Resort'
-  },
-  {
-    id: '18',
-    title: 'Review Performance Metrics',
-    type: 'Task',
-    startTime: new Date('2025-01-13T09:00:00'),
-    endTime: new Date('2025-01-13T12:00:00'),
-    description: 'Analyze data from the last quarter.'
-  },
-  {
-    id: '19',
-    title: 'Attend Workshop',
-    type: 'Event',
-    startTime: new Date('2025-01-15T10:00:00'),
-    endTime: new Date('2025-01-15T16:00:00'),
-    location: 'Convention Center'
-  },
-  {
-    id: '20',
-    title: 'Schedule Social Media Posts',
-    type: 'Task',
-    startTime: new Date('2025-01-16T14:00:00'),
-    endTime: new Date('2025-01-16T16:00:00')
-  }
-]
 
 interface SidebarProps {
   setTypeFilter: (filterType: FilterType) => void
 }
 
 const Sidebar = ({ setTypeFilter }: SidebarProps) => {
-  const types: FilterType[] = ['All', 'Event', 'Meeting', 'Task']
+  const types: FilterType[] = ['All', ...(EVENT_TYPES as FilterType[])]
   const [currentType, setCurrentType] = useState<FilterType>('All')
   const sidebarRef = useRef<HTMLDivElement>(null) // Add ref for SidebarFlowbite
   const [isCollapsed, setIsCollapsed] = useState(true) // Initially collapsed on mobile
@@ -221,8 +62,9 @@ const Sidebar = ({ setTypeFilter }: SidebarProps) => {
       >
         <p className='text-xl font-bold'>Phân loại</p>
         <hr className='my-2 border-black' /> {/* Added a horizontal line */}
-        {types.map((type) => (
+        {types.map((type, index) => (
           <div
+            key={index}
             className={`w-full p-2 hover:bg-cyan-500 rounded-md cursor-pointer font-semibold ${
               currentType === type ? 'bg-cyan-500' : ''
             }`}
@@ -241,22 +83,46 @@ const Sidebar = ({ setTypeFilter }: SidebarProps) => {
 
 const PersonalEvent: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState<FilterType>('All')
-  const [events, setEvents] = useState<Event[]>([])
+  const [events, setEvents] = useState<ReturnEvent[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
-    setEvents(eventList)
+    getAllEventsUser().then((res) => {
+      setEvents(res)
+    })
+    /* setEvents(eventList) */
   }, [])
+
+  const handleCreateEvent = async (data: EventFormData) => {
+    await createEventUser(data).then((res) => {
+      setEvents([...events, res])
+    })
+  }
 
   const filterEvents = typeFilter === 'All' ? events : events.filter((event) => event.type === typeFilter)
 
-  const EventComponent = ({ event }: { event: Event }) => {
+  const EventComponent = ({ event }: { event: ReturnEvent }) => {
     return (
-      <div key={event.id} className='bg-red-200 p-2 my-2 w-full rounded-lg drop-shadow-md'>
-        <div className='text-lg font-semibold'>{event.title}</div>({event.type}) - {event.startTime.toLocaleString()} to{' '}
-        {event.endTime.toLocaleString()}
-        {event.location && <p>Location: {event.location}</p>}
-        {event.description && <p>Description: {event.description}</p>}
-        {event.attendees && <p>Attendees: {event.attendees.join(', ')}</p>}
+      <div
+        key={event.eventId}
+        className='bg-red-200 p-2 my-2 w-full rounded-lg drop-shadow-md flex justify-between items-center'
+      >
+        <div>
+          <div className='flex justify-start items-center space-x-4'>
+            <p className='text-lg font-semibold'>{event.summary}</p>
+            <Badge className='bg-green-400'>{event.type}</Badge>
+          </div>
+          From:
+          {new Date(event.startTime).toLocaleString()} to {new Date(event.endTime).toLocaleString()}
+          {event.description && <p>Description: {event.description}</p>}
+        </div>
+        <Button
+          variant='link'
+          onClick={() => navigate(`/group-management/${event.group_id}`)}
+          className='font-bold text-lg '
+        >
+          Go to group
+        </Button>
       </div>
     )
   }
@@ -265,10 +131,14 @@ const PersonalEvent: React.FC = () => {
     <div className='flex w-full h-full justify-between overflow-hidden'>
       <div className='overflow-auto flex-1 flex justify-center w-full py-12'>
         <div className='w-4/5'>
-          <div className='w-full text-3xl font-bold'>Sự kiện cá nhân</div>
+          <div className='w-full flex justify-between items-center'>
+            <div className='w-full text-3xl font-bold'>Sự kiện cá nhân</div>
+            <CreateEventDialog onCreateEvent={handleCreateEvent} />
+          </div>
+
           <div className='flex flex-col gap-3 py-10'>
-            {filterEvents.map((event) => (
-              <EventComponent event={event} />
+            {filterEvents.map((event, index) => (
+              <EventComponent key={index} event={event} />
             ))}
           </div>
         </div>
