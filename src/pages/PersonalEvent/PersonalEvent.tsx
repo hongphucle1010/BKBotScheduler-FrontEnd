@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { CreateEventDialog } from '../../components/Event/CreateEventDialog'
-import { createEventUser, getAllEventsUser } from '../../api/event/event'
+import { createEventUser, getAllPersonalEvents } from '../../api/event/event'
 import { EventFormData } from '../../lib/validation'
 import { Event } from '../../lib/types/entity'
 import { EVENT_TYPES } from '../../lib/helper/constant'
@@ -88,7 +88,7 @@ const PersonalEvent: React.FC = () => {
   const [isDeleting, setIsDeleting] = useState<boolean[]>([])
 
   useEffect(() => {
-    getAllEventsUser().then((res) => {
+    getAllPersonalEvents().then((res) => {
       setEvents(res)
     })
   }, [])
