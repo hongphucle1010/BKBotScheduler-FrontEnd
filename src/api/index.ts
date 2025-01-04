@@ -52,7 +52,12 @@ apiClient.interceptors.response.use(
           console.error('Token refresh failed', error)
           throw Error(REFRESH_TOKEN_EXPIRED)
         }
-      }
+      } else {
+        // Handle token refresh failure
+        // mostly logout the user and re-authenticate by login again
+        console.error('Refresh token not found')
+        throw Error(REFRESH_TOKEN_EXPIRED)
+      } 
     }
     return Promise.reject(error)
   }
