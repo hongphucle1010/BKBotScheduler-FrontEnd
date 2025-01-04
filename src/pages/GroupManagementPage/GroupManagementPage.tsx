@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Avatar } from 'flowbite-react'
 import { Input } from '../../components/ui/input'
 import { Link } from 'react-router-dom'
@@ -56,6 +56,7 @@ const GroupManagementPage = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const filteredGroups = groups.filter((group) => group.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
@@ -76,6 +77,7 @@ const GroupManagementPage = () => {
 
   const onSubmit = async (data: z.infer<typeof groupCreateSchema>) => {
     try {
+      setIsSubmitting(true)
       // upload image to cdn to get url => create group
       await createGroup(data)
         .then((res) => {
@@ -83,6 +85,7 @@ const GroupManagementPage = () => {
         })
         .finally(() => {
           setIsOpen(false)
+          setIsSubmitting(false)
         })
     } catch (error) {
       console.error(error)
@@ -137,7 +140,7 @@ const GroupManagementPage = () => {
                   name='avatar'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Avatar</FormLabel>
+                      <FormLabel>Avatar (optional)</FormLabel>
                       <FormControl>
                         <Input type='text' {...field} />
                       </FormControl>
@@ -146,17 +149,29 @@ const GroupManagementPage = () => {
                   )}
                 />
                 <div className='w-full flex justify-end items-center space-x-4 pt-4'>
+                  {!isSubmitting && (
+                    <Button
+                      variant='outline'
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setIsOpen(false)
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  )}
+
                   <Button
-                    variant='outline'
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setIsOpen(false)
-                    }}
+                    variant='default'
+                    disabled={isSubmitting}
+                    type='submit'
+                    className={`${isSubmitting ? 'cursor-not-allowed bg-gray-500 hover:bg-gray-500' : ''}`}
                   >
-                    Cancel
-                  </Button>
-                  <Button variant='default' type='submit'>
-                    Create
+                    {isSubmitting ? (
+                      <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900'></div>
+                    ) : (
+                      'Create'
+                    )}
                   </Button>
                 </div>
               </form>

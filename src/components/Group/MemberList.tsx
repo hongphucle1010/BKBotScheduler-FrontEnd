@@ -13,19 +13,24 @@ export default function MemberList() {
   const [newMemberEmail, setNewMemberEmail] = useState('')
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { members, setMembers, groupId } = useGroupContext()
+  const [isAdding, setIsAdding] = useState(false)
 
   useEffect(() => {
     console.log('members: ', members)
   }, [])
 
   const addMember = async () => {
+    setIsAdding(true)
     if (newMemberEmail.trim()) {
-      await addMemberToGroup(groupId, newMemberEmail).then((res) => {
-        console.log('member added: ', res)
-        setMembers([...members, res])
-        setNewMemberEmail('')
-        setIsDialogOpen(false)
-      })
+      await addMemberToGroup(groupId, newMemberEmail)
+        .then((res) => {
+          setMembers([...members, res])
+          setNewMemberEmail('')
+        })
+        .finally(() => {
+          setIsAdding(false)
+          setIsDialogOpen(false)
+        })
     }
   }
 
@@ -53,7 +58,13 @@ export default function MemberList() {
                 onChange={(e) => setNewMemberEmail(e.target.value)}
                 placeholder='Enter email address'
               />
-              <Button onClick={addMember}>Add</Button>
+              <Button
+                onClick={addMember}
+                disabled={isAdding}
+                className={`${isAdding ? 'cursor-not-allowed bg-gray-500 hover:bg-gray-500' : ''}`}
+              >
+                {isAdding ? 'Adding...' : 'Add'}
+              </Button>
             </div>
           </DialogContent>
         </Dialog>

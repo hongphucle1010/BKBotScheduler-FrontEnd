@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios'
 import { apiClient } from '..'
 import { Event } from '../../lib/types/entity'
-import { CreateEventGroupProps, CreateEventUserProps, ReturnEvent } from './types'
+import { CreateEventGroupProps, CreateEventUserProps } from './types'
 
 export async function getEventsFromGroup(groupId: string): Promise<Event[]> {
   try {
@@ -19,7 +19,8 @@ export async function getEventsFromGroup(groupId: string): Promise<Event[]> {
         isComplete: event.isComplete,
         isRecurring: event.isRecurring ? event.isRecurring : false,
         type: event.type,
-        priority: event.priority
+        priority: event.priority,
+        groupId: event.group_id
       }
     })
 
@@ -44,7 +45,8 @@ export async function createEventGroup(data: CreateEventGroupProps): Promise<Eve
       isComplete: response.data.isComplete,
       isRecurring: response.data.isRecurring ? response.data.isRecurring : false,
       type: response.data.type,
-      priority: response.data.priority
+      priority: response.data.priority,
+      groupId: response.data.group_id
     }
     return event
   } catch (error) {
@@ -55,7 +57,7 @@ export async function createEventGroup(data: CreateEventGroupProps): Promise<Eve
   }
 }
 
-export async function updateEventGroup(eventId: string, data: Partial<Event>): Promise<Event> {
+export async function updateEvent(eventId: string, data: Partial<Event>): Promise<Event> {
   try {
     const response = await apiClient.put(`/events/${eventId}`, data)
     return response.data
@@ -67,7 +69,7 @@ export async function updateEventGroup(eventId: string, data: Partial<Event>): P
   }
 }
 
-export async function deleteEventGroup(eventId: string): Promise<void> {
+export async function deleteEvent(eventId: string): Promise<void> {
   try {
     await apiClient.delete(`/events/${eventId}`)
   } catch (error) {
@@ -78,13 +80,13 @@ export async function deleteEventGroup(eventId: string): Promise<void> {
   }
 }
 
-export async function getAllEventsUser(): Promise<ReturnEvent[]> {
+export async function getAllEventsUser(): Promise<Event[]> {
   try {
     const response = await apiClient.get(`/events/getme`)
 
     console.log('response: ', response.data)
 
-    const events: ReturnEvent[] = response.data.events.map((event: any) => {
+    const events: Event[] = response.data.events.map((event: any) => {
       return {
         eventId: event.id,
         summary: event.summary,
@@ -95,7 +97,7 @@ export async function getAllEventsUser(): Promise<ReturnEvent[]> {
         isRecurring: event.isRecurring ? event.isRecurring : false,
         type: event.type,
         priority: event.priority,
-        group_id: event.group_id
+        groupId: event.group_id
       }
     })
 
@@ -108,10 +110,10 @@ export async function getAllEventsUser(): Promise<ReturnEvent[]> {
   }
 }
 
-export async function createEventUser(data: CreateEventUserProps): Promise<ReturnEvent> {
+export async function createEventUser(data: CreateEventUserProps): Promise<Event> {
   try {
     const response = await apiClient.post(`/events`, data)
-    const event: ReturnEvent = {
+    const event: Event = {
       eventId: response.data.id,
       summary: response.data.summary,
       description: response.data.description,
@@ -121,32 +123,9 @@ export async function createEventUser(data: CreateEventUserProps): Promise<Retur
       isRecurring: response.data.isRecurring ? response.data.isRecurring : false,
       type: response.data.type,
       priority: response.data.priority,
-      group_id: response.data.group_id
+      groupId: response.data.group_id
     }
     return event
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      console.error('Axios error: ', error)
-      throw new Error(error.response?.data)
-    } else throw error
-  }
-}
-
-export async function updateEventUser(eventId: string, data: Partial<Event>): Promise<Event> {
-  try {
-    const response = await apiClient.put(`/events/user/${eventId}`, data)
-    return response.data
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      console.error('Axios error: ', error)
-      throw new Error(error.response?.data)
-    } else throw error
-  }
-}
-
-export async function deleteEventUser(eventId: string): Promise<void> {
-  try {
-    await apiClient.delete(`/events/user/${eventId}`)
   } catch (error) {
     if (error instanceof AxiosError) {
       console.error('Axios error: ', error)

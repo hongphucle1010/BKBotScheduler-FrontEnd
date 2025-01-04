@@ -16,6 +16,7 @@ export interface Event {
   type: string
   priority: number
   eventId: string
+  groupId?: string
 }
 
 export interface Member {

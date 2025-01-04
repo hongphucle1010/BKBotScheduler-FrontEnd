@@ -5,7 +5,6 @@ interface DateTimeInputProps {
   control: any
   name: 'startTime' | 'endTime'
   form: any
-  init: string
   className?: string
 }
 
@@ -26,11 +25,8 @@ export const InputDateTime = ({
   control,
   name,
   form,
-  init,
   className = 'border-none focus:border-b-2 focus:border-slate-400'
 }: DateTimeInputProps) => {
-  console.log('init: ', init)
-
   return (
     <FormField
       control={control}
@@ -46,14 +42,18 @@ export const InputDateTime = ({
           <FormControl>
             <Input
               type='datetime-local'
-              defaultValue={init ? new Date(init).toISOString().slice(0, 16) : ''}
               className={className}
               min={
-                name === 'endTime' && form.watch('startTime')
-                  ? new Date(form.watch('startTime')).toISOString().slice(0, 16)
-                  : new Date().toISOString().slice(0, 16)
+                name == 'endTime' && form.watch('startTime')
+                  ? new Date(form.watch('startTime')).toLocaleString('sv', { timeZone: 'Asia/Jakarta' }).slice(0, 16)
+                  : new Date().toLocaleString('sv', { timeZone: 'Asia/Jakarta' }).slice(0, 16)
               }
               {...field}
+              value={
+                field.value && field.value !== ''
+                  ? new Date(field.value).toLocaleString('sv', { timeZone: 'Asia/Jakarta' }).slice(0, 16)
+                  : ''
+              }
             />
           </FormControl>
           {fieldState.error && (

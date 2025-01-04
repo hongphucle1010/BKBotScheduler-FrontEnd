@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { Event, Member } from '../lib/types/entity'
 import { getGroupDetail } from '../api/group/group'
 import { getEventsFromGroup } from '../api/event/event'
-import { get } from 'http'
 
 interface GroupContextType {
   events: Event[]
@@ -25,13 +24,11 @@ export const GroupProvider = ({ children, groupId }: GroupProviderProps) => {
   const [members, setMembers] = useState<Member[]>([])
 
   useEffect(() => {
-    getGroupDetail(groupId).then((res) => {
-      console.log('res: ', res)
-      setMembers(res.users)
-    })
     getEventsFromGroup(groupId).then((res) => {
-      console.log('events: ', res)
       setEvents(res)
+    })
+    getGroupDetail(groupId).then((res) => {
+      setMembers(res.users)
     })
   }, [groupId])
 

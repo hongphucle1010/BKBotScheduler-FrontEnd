@@ -14,8 +14,8 @@ interface EditEventDialogProps {
 export function EditEventDialog({ event, onEditEvent }: EditEventDialogProps) {
   const [open, setOpen] = useState(false)
 
-  const handleEditEvent = (data: EventFormData) => {
-    onEditEvent(data)
+  const handleEditEvent = async (data: EventFormData) => {
+    await onEditEvent(data)
     setOpen(false)
   }
 
