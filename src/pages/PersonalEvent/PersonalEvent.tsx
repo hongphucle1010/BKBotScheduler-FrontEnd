@@ -3,11 +3,12 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import { CreateEventDialog } from '../../components/Event/CreateEventDialog'
 import { createEventUser, getAllEventsUser } from '../../api/event/event'
 import { EventFormData } from '../../lib/validation'
-import { ReturnEvent } from '../../api/event/types'
+import { Event } from '../../lib/types/entity'
 import { EVENT_TYPES } from '../../lib/helper/constant'
 import { Badge } from '../../components/ui/badge'
 import { Button } from '../../components/ui/button'
-import { useNavigate } from 'react-router-dom'
+import { EditEventDialog } from '../../components/Event/EditEventDialog'
+import { updateEvent, deleteEvent } from '../../api/event/event'
 
 type EventType =
   | 'TASK'
@@ -83,14 +84,13 @@ const Sidebar = ({ setTypeFilter }: SidebarProps) => {
 
 const PersonalEvent: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState<FilterType>('All')
-  const [events, setEvents] = useState<ReturnEvent[]>([])
-  const navigate = useNavigate()
+  const [events, setEvents] = useState<Event[]>([])
+  const [isDeleting, setIsDeleting] = useState<boolean[]>([])
 
   useEffect(() => {
     getAllEventsUser().then((res) => {
       setEvents(res)
     })
-    /* setEvents(eventList) */
   }, [])
 
   const handleCreateEvent = async (data: EventFormData) => {
@@ -99,9 +99,45 @@ const PersonalEvent: React.FC = () => {
     })
   }
 
+  const handleEditEvent = async (data: EventFormData) => {
+    const { startTime, endTime, ...rest } = data
+    await updateEvent(data.eventId!, {
+      ...rest,
+      startTime: new Date(startTime).toISOString(),
+      endTime: new Date(endTime).toISOString()
+    }).then(() => {
+      const updatedEvents = events.map((event) => (event.eventId === data.eventId ? { ...event, ...data } : event))
+      setEvents(updatedEvents)
+    })
+  }
+
+  const handleDeleteEvent = async (eventId: string) => {
+    // Find the index of the event to be deleted
+    const index = filterEvents.findIndex((event) => event.eventId === eventId)
+
+    setIsDeleting((prev) => {
+      const newIsDeleting = [...prev]
+      newIsDeleting[index] = true
+      return newIsDeleting
+    })
+    await deleteEvent(eventId)
+      .then(() => setEvents(events.filter((event) => event.eventId !== eventId)))
+      .finally(() =>
+        setIsDeleting((prev) => {
+          const newIsDeleting = [...prev]
+          newIsDeleting[index] = false
+          return newIsDeleting
+        })
+      )
+  }
+
   const filterEvents = typeFilter === 'All' ? events : events.filter((event) => event.type === typeFilter)
 
-  const EventComponent = ({ event }: { event: ReturnEvent }) => {
+  useEffect(() => {
+    setIsDeleting(new Array(filterEvents.length).fill(false))
+  }, [filterEvents.length, typeFilter])
+
+  const EventComponent = ({ event, index }: { event: Event; index: number }) => {
     return (
       <div
         key={event.eventId}
@@ -116,13 +152,17 @@ const PersonalEvent: React.FC = () => {
           {new Date(event.startTime).toLocaleString()} to {new Date(event.endTime).toLocaleString()}
           {event.description && <p>Description: {event.description}</p>}
         </div>
-        <Button
-          variant='link'
-          onClick={() => navigate(`/group-management/${event.group_id}`)}
-          className='font-bold text-lg '
-        >
-          Go to group
-        </Button>
+        <div className='flex justify-start items-center space-x-4'>
+          <EditEventDialog event={event} onEditEvent={handleEditEvent} />
+          <Button
+            onClick={() => handleDeleteEvent(event.eventId)}
+            variant='destructive'
+            disabled={isDeleting[index]}
+            className={`${isDeleting[index] ? 'cursor-not-allowed bg-red-500/50 hover:bg-red-500/50' : ''}`}
+          >
+            {isDeleting[index] ? 'Deleting...' : 'Delete'}
+          </Button>
+        </div>
       </div>
     )
   }
@@ -138,7 +178,7 @@ const PersonalEvent: React.FC = () => {
 
           <div className='flex flex-col gap-3 py-10'>
             {filterEvents.map((event, index) => (
-              <EventComponent key={index} event={event} />
+              <EventComponent key={index} event={event} index={index} />
             ))}
           </div>
         </div>

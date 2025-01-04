@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Event } from '../../lib/types/entity'
@@ -12,11 +15,13 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form'
 import { InputDateTime } from './InputDateTime'
 import { EVENT_TYPES } from '../../lib/helper/constant'
 interface EventFormProps {
-  onSubmit: (data: EventFormData) => void
+  onSubmit: (data: EventFormData) => Promise<void>
   initialData?: Event
 }
 
 export function EventForm({ onSubmit, initialData }: EventFormProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const form = useForm<EventFormData>({
     resolver: zodResolver(eventSchema),
     defaultValues: initialData || {
@@ -27,8 +32,11 @@ export function EventForm({ onSubmit, initialData }: EventFormProps) {
     }
   })
 
-  const handleSubmit = (data: EventFormData) => {
-    onSubmit(data)
+  const handleSubmit = async (data: EventFormData) => {
+    setIsSubmitting(true)
+    await onSubmit(data).then(() => {
+      setIsSubmitting(false)
+    })
   }
 
   return (
@@ -61,23 +69,13 @@ export function EventForm({ onSubmit, initialData }: EventFormProps) {
         />
 
         <div className='flex flex-col w-full space-y-4'>
-          <div className='flex w-full justity-between items-center'>
+          <div className='flex w-full justify-between items-center'>
             <Label>Start Time</Label>
-            <InputDateTime
-              init={initialData?.startTime ? initialData.startTime : ''}
-              control={form.control}
-              name='startTime'
-              form={form}
-            />
+            <InputDateTime control={form.control} name='startTime' form={form} />
           </div>
-          <div className='flex w-full justity-between items-center'>
+          <div className='flex w-full justify-between items-center'>
             <Label>End Time</Label>
-            <InputDateTime
-              init={initialData?.endTime ? initialData.endTime : ''}
-              control={form.control}
-              name='endTime'
-              form={form}
-            />
+            <InputDateTime control={form.control} name='endTime' form={form} />
           </div>
         </div>
 
@@ -155,7 +153,17 @@ export function EventForm({ onSubmit, initialData }: EventFormProps) {
           )}
         />
 
-        <Button type='submit'>Submit</Button>
+        <Button
+          type='submit'
+          className={`${isSubmitting ? 'bg-slate-500 cursor-not-allowed hover:bg-slate-500' : ''} w-full`}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900'></div>
+          ) : (
+            'Submit'
+          )}
+        </Button>
       </form>
     </Form>
   )
