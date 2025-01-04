@@ -13,17 +13,19 @@ function App() {
   const user = useSelector((state: RootState) => state.user.value)
 
   useEffect(() => {
-    try {
-      if (user.role === 'STUDENT') {
-        getMyGroupsApi().then((groups) => {
+    const fetchData = async () => {
+      try {
+        if (user.role === 'STUDENT') {
+          const groups = await getMyGroupsApi()
           dispatch(setGroups(groups.groups))
-        })
+        }
+      } catch (error) {
+        if (error instanceof Error && error.message === REFRESH_TOKEN_EXPIRED) {
+          logOut(dispatch)
+        } else throw error
       }
-    } catch (error) {
-      if (error instanceof Error && error.message === REFRESH_TOKEN_EXPIRED) {
-        logOut(dispatch)
-      } else throw error
     }
+    fetchData()
   }, [])
 
   return <Router />

@@ -42,7 +42,7 @@ apiClient.interceptors.response.use(
             refreshToken
           } as RefreshTokenRequest)
           // don't use axios instance that already configured for refresh token api call
-          const newAccessToken = response.data.accessToken
+          const newAccessToken = response.data.access_token
           setAccessToken(newAccessToken) // use helper function to set new access token
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
           return axios(originalRequest) // recall API with new token
@@ -52,7 +52,12 @@ apiClient.interceptors.response.use(
           console.error('Token refresh failed', error)
           throw Error(REFRESH_TOKEN_EXPIRED)
         }
-      }
+      } else {
+        // Handle token refresh failure
+        // mostly logout the user and re-authenticate by login again
+        console.error('Refresh token not found')
+        throw Error(REFRESH_TOKEN_EXPIRED)
+      } 
     }
     return Promise.reject(error)
   }

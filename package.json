@@ -36,6 +36,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "dotenv": "^16.4.7",
+    "fake-indexeddb": "^6.0.0",
     "flowbite": "^2.5.2",
     "flowbite-react": "^0.10.2",
     "idb": "^8.0.1",
