@@ -4,6 +4,7 @@ const SigninButtonGG: React.FC = () => {
     <button
       className='p-2 bg-gray-200 rounded-full font-semibold flex gap-2 items-center'
       onClick={() => (location.href = 'http://103.82.133.50:5000/auth/login')}
+      aria-label='Sign in with Google'
     >
       <img src={ggLogo} alt='google logo' />
       <span className='text-sm md:text-base'>Sign in with Google</span>

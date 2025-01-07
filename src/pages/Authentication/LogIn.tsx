@@ -2,6 +2,7 @@ import { useSearchParams } from 'react-router-dom'
 import { Spinner } from 'flowbite-react'
 import { logInWithGoogle } from '../../lib/helper/authentication'
 import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
 
 const LogIn = () => {
   const [searchParams] = useSearchParams()
@@ -12,11 +13,14 @@ const LogIn = () => {
   //   const hd = searchParams.get('hd')
   //   const prompt = searchParams.get('prompt')
 
-  if (code) {
-    logInWithGoogle(code, dispatch).then((response) => {
-      console.log(response)
-    })
-  }
+  useEffect(() => {
+    if (code) {
+      console.log("Code is: ", code)
+      logInWithGoogle(code, dispatch).then((response) => {
+        console.log(response)
+      })
+    }
+  }, [code])
 
   return (
     <div className='flex flex-col items-center justify-center h-screen'>

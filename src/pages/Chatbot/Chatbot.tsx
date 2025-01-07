@@ -63,6 +63,7 @@ export const MessageBox = () => {
         style={{
           height: '80%'
         }}
+        id='chat-box'
       >
         {messageList.map((pair, index) => (
           <>

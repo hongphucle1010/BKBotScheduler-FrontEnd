@@ -12,13 +12,17 @@ import {
 import { logOutReducer } from '../redux/reducers/userState'
 import { clearMessages } from '../redux/reducers/message'
 
-jest.mock('../../api/authentication/authentication')
+vi.mock('./indexeddb', () => ({
+  saveImageToIndexedDB: vi.fn(),
+  getImageFromIndexedDB: vi.fn(),
+  deleteImageFromIndexedDB: vi.fn()
+}))
 
 describe('Authentication Helper Functions', () => {
   let dispatch: Dispatch
 
   beforeEach(() => {
-    dispatch = jest.fn()
+    dispatch = vi.fn()
     localStorage.clear()
   })
 
