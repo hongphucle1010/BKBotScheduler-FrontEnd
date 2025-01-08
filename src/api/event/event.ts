@@ -80,7 +80,6 @@ export async function deleteEvent(eventId: string): Promise<void> {
   }
 }
 
-
 export async function getAllPersonalEvents(): Promise<Event[]> {
   try {
     const response = await apiClient.get(`/events/getme`)
