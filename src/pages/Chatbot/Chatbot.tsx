@@ -4,6 +4,8 @@ import { MessageElement } from './MessageElement'
 import MessageTypingArea from './MessageTypingArea'
 import { useEffect, useRef, useState } from 'react'
 import { FaArrowCircleDown } from 'react-icons/fa'
+import { Alert } from 'flowbite-react'
+import { HiInformationCircle } from 'react-icons/hi'
 
 const ScrollToBottomButton = ({ scrollToBottom }: { scrollToBottom: () => void }) => {
   return (
@@ -75,6 +77,7 @@ export const MessageBox = () => {
 }
 
 const Chatbot = () => {
+  const [showAlert, setShowAlert] = useState<boolean>(true)
   return (
     <div className='flex w-full h-full items-center justify-center'>
       <div
@@ -86,6 +89,11 @@ const Chatbot = () => {
           maxHeight: '95%'
         }}
       >
+        {showAlert && (
+          <Alert color='failure' icon={HiInformationCircle} onDismiss={() => setShowAlert(false)}>
+            <span className='font-medium'>Tính năng đang hoàn thiện.</span> Chatbot có thể hoạt động không như mong đợi.
+          </Alert>
+        )}
         <MessageBox />
         <MessageTypingArea />
       </div>
