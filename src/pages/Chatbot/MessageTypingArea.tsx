@@ -61,6 +61,7 @@ const MessageTypingArea = React.memo(() => {
           setMessage(e.target.value)
         }}
         value={message}
+        id='message-input'
       />
       <Button
         color='purple'
@@ -68,6 +69,7 @@ const MessageTypingArea = React.memo(() => {
         onClick={() => {
           sendMessage()
         }}
+        aria-label="Send message"
       >
         <LuSendHorizonal />
       </Button>
