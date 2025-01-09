@@ -1,17 +1,15 @@
 import { Button } from 'flowbite-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { LuSendHorizonal } from 'react-icons/lu'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { MessagePair } from '../../lib/redux/reducers/types'
 import { addMessagePair, updateLastBotMessage } from '../../lib/redux/reducers/message'
-import { runGemini } from '../../api/gemini/gemini'
-import { RootState } from '../../lib/redux/store'
+import { sendMessageApi } from '../../api/chatbot/chatbot'
 
 const MessageTypingArea = React.memo(() => {
   const [message, setMessage] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const dispatch = useDispatch()
-  const messageList = useSelector((state: RootState) => state.message.value)
 
   const sendMessage = async () => {
     if (!message) {
@@ -26,7 +24,11 @@ const MessageTypingArea = React.memo(() => {
     setMessage('')
 
     // Get the bot's response
-    const answer = await runGemini(message, messageList)
+    // const answer = await runGemini(message, messageList)
+    console.log('Sending message:', message)
+    const response = await sendMessageApi(message)
+    console.log(response)
+    const answer = response.message
     // Update the last bot message
     dispatch(updateLastBotMessage(answer))
   }
