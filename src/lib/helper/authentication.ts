@@ -6,6 +6,7 @@ import { clearMessages } from '../redux/reducers/message'
 import { saveImageToIndexedDB, getImageFromIndexedDB, deleteImageFromIndexedDB } from './indexeddb'
 import { clearGroup, setGroups } from '../redux/reducers/group'
 import { getMyGroupsApi } from '../../api/group/group'
+import { clearMessageHistoryApi } from '../../api/chatbot/chatbot'
 
 export function setAccessToken(token: string) {
   localStorage.setItem('accessToken', token)
@@ -53,6 +54,7 @@ export async function logInWithGoogle(code: string, dispatch: Dispatch) {
     getMyGroupsApi().then((groups) => {
       dispatch(setGroups(groups.groups))
     })
+    // getMessageHistoryApi().then((messages) => {})
   })
 }
 
@@ -83,4 +85,5 @@ export function logOut(dispatch: Dispatch) {
   dispatch(clearMessages())
   dispatch(clearGroup())
   deleteImageFromIndexedDB()
+  clearMessageHistoryApi()
 }

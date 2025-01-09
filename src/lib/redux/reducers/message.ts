@@ -13,6 +13,10 @@ const messageSlice = createSlice({
   name: 'message',
   initialState,
   reducers: {
+    setMessages: (state: MessageState, action: PayloadAction<MessagePair[]>) => {
+      state.value = action.payload
+    },
+
     addMessagePair: (state: MessageState, action: PayloadAction<MessagePair>) => {
       state.value.push(action.payload)
     },
