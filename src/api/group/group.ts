@@ -42,7 +42,7 @@ export async function createGroup(data: CreateGroup): Promise<Group> {
 
 export async function addMemberToGroup(groupId: string, email: string): Promise<Member> {
   try {
-    const response = await apiClient.post(`/group/add/`, {
+    const response = await apiClient.post(`/group/add`, {
       groupId,
       email
     })
@@ -64,7 +64,7 @@ export async function addMemberToGroup(groupId: string, email: string): Promise<
 
 export async function removeUserFromGroup(groupId: string, email: string): Promise<void> {
   try {
-    await apiClient.put(`/group/remove/`, {
+    await apiClient.put(`/group/remove`, {
       groupId,
       email
     })
